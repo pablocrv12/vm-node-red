@@ -1,0 +1,43 @@
+.navbar {
+  width: 100%;
+  background-color: #d60f0f;
+  color: white;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 8px 20px;
+  height: 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  max-width: 200px; /* Establece un ancho máximo para el logo */
+  display: flex; /* Usa flexbox para alinear el contenido verticalmente */
+  align-items: center; /* Alinea el contenido verticalmente */
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+
+.logo img {
+  max-height: 60%; /* Establece una altura máxima para la imagen */
+}
+.buttons {
+  display: flex;
+  justify-content: flex-end; /* Alinea los botones al final de la barra de navegación */
+  margin-left: auto; /* Empuja los botones hacia la derecha */
+}
+
+.buttons button {
+  margin-left: 10px; /* Añade un margen entre los botones */
+  padding: 4px 8px;
+  border: none;
+  border-radius: 4px;
+  background-color: #61dafb;
+  color: white;
+  cursor: pointer;
+}
