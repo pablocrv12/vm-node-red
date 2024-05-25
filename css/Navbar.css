@@ -26,10 +26,12 @@
 .logo img {
   max-height: 60%; /* Establece una altura máxima para la imagen */
 }
+
 .buttons {
   display: flex;
   justify-content: flex-end; /* Alinea los botones al final de la barra de navegación */
   margin-left: auto; /* Empuja los botones hacia la derecha */
+  margin-right: 30px; /* Agrega un margen derecho para separar los botones del borde derecho */
 }
 
 .buttons button {
