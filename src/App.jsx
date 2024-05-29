@@ -1,9 +1,9 @@
 import Navbar from './components/Navbar';
-import React, { useState } from "react";
+import React from "react";
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import Login from './components/Login'
-import Protected from './components/Protected'
-import Register from './components/Register'
+import Login from './components/Login';
+import Protected from './components/Protected';
+import Register from './components/Register';
 
 const App = () => {
 
@@ -16,19 +16,17 @@ const App = () => {
     );
   }
 
-
   return (
-  
-      <div className="App">
+    <div className="App">
       <BrowserRouter>
         <Routes>
-        <Route path='/' element={<Home />} />
+          <Route path='/' element={<Home />} />
           <Route path='/login' element={<Login />} />
           <Route path='/protected' element={<Protected />} />
+          <Route path='/register' element={<Register />} /> {/* Añadir ruta para registro */}
         </Routes>
       </BrowserRouter>
     </div>
-    
   );
 }
 
