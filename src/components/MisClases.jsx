@@ -85,6 +85,7 @@ const MisClases = () => {
 
     const handleDeleteClass = async (classId) => {
         const token = localStorage.getItem('token');
+        console.log(token)
         try {
             await axios.delete(`http://localhost:3000/api/v1/class/${classId}`, {
                 headers: {
@@ -100,9 +101,9 @@ const MisClases = () => {
     const handleLeaveClass = async (classId) => {
         const token = localStorage.getItem('token');
         try {
-            await axios.delete(`http://localhost:3000/api/v1/class/leave/${classId}`, {
+            await axios.patch(`http://localhost:3000/api/v1/class/${classId}/leave/${userId}`, null, {
                 headers: {
-                    Authorization: `${token}`
+                    Authorization: `${token}` // Aquí establece el token en el encabezado de autorización
                 }
             });
             setJoinedClasses(joinedClasses.filter(clase => clase._id !== classId));

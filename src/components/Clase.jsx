@@ -9,8 +9,8 @@ const Clase = () => {
     const [error, setError] = useState(null);
     const [userRole, setUserRole] = useState(null); 
     const [flows, setFlows] = useState([]);
-    const [selectedFlow, setSelectedFlow] = useState(null); // Estado para almacenar el flujo seleccionado
-    const [showModal, setShowModal] = useState(false); // Estado para mostrar u ocultar el modal
+    const [selectedFlow, setSelectedFlow] = useState(null);
+    const [showModal, setShowModal] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -47,7 +47,7 @@ const Clase = () => {
                     setLoading(false);
                 });
 
-                axios.get('http://localhost:3000/api/v1/flow/', {
+                axios.get(`http://localhost:3000/api/v1/class/${classId}/flows`, {
                     headers: {
                         Authorization: `${token}`
                     }
@@ -94,9 +94,13 @@ const Clase = () => {
         navigate(`/clase/${classId}/participantes`);
     };
 
+    const handleNavigateToInvitation = () => {
+        navigate(`/invitacionClase/${classId}`);
+    };
+
     const handleEntregarFlujo = (flowId) => {
         setSelectedFlow(flowId);
-        setShowModal(false); // Cerrar el modal después de seleccionar un flujo
+        setShowModal(false);
         
         const token = localStorage.getItem('token');
         if (token) {
@@ -110,6 +114,26 @@ const Clase = () => {
             })
             .catch(error => {
                 console.error('Error al entregar el flujo:', error);
+            });
+        } else {
+            console.error('No token found');
+        }
+    };
+
+    const handleEliminarFlujo = (flowId) => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            axios.delete(`http://localhost:3000/api/v1/class/${classId}/deleteFlow/${flowId}`, {
+                headers: {
+                    Authorization: `${token}`
+                }
+            })
+            .then(response => {
+                console.log('Flujo eliminado con éxito:', response.data);
+                setFlows(flows.filter(flow => flow._id !== flowId));
+            })
+            .catch(error => {
+                console.error('Error al eliminar el flujo:', error);
             });
         } else {
             console.error('No token found');
@@ -134,14 +158,13 @@ const Clase = () => {
                     )}
                     {userRole === 'professor' && (
                         <div>
-                            <button>Invitar Alumnos</button>
+                            <button onClick={handleNavigateToInvitation}>Invitar Alumnos</button>
                             <button onClick={handleViewFlows}>Ver Flows</button>
                             <button onClick={handleVerParticipantes}>Ver Participantes</button>
                         </div>
                     )}
                 </div>
             )}
-            {/* Ventana emergente para mostrar la lista de flujos */}
             {showModal && (
                 <div className="modal">
                     <div className="modal-content">
@@ -152,6 +175,7 @@ const Clase = () => {
                                 <li key={flow._id}>
                                     <span>{flow.name}</span>
                                     <button onClick={() => handleEntregarFlujo(flow._id)}>Entregar</button>
+                                    <button onClick={() => handleEliminarFlujo(flow._id)}>Eliminar</button>
                                 </li>
                             ))}
                         </ul>

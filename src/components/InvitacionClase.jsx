@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 
-const InviteStudents = ({ className }) => {
+const InvitacionClase = ({ className }) => {
     const [emails, setEmails] = useState('');
     const { classId } = useParams();
 
@@ -10,7 +10,7 @@ const InviteStudents = ({ className }) => {
         e.preventDefault();
         const recipientEmails = emails.split(',').map(email => email.trim());
         try {
-            await axios.post('http://localhost:3000/send-invite', { recipientEmails, className, classId });
+            await axios.post('http://localhost:3000/api/v1/class/send-invite', { recipientEmails, className, classId });
             alert('Invitations sent successfully');
         } catch (error) {
             console.error('Error sending invitations:', error);
@@ -29,4 +29,4 @@ const InviteStudents = ({ className }) => {
     );
 };
 
-export default InviteStudents;
+export default InvitacionClase;

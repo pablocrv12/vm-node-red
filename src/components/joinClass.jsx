@@ -1,0 +1,45 @@
+// JoinClass.js
+import React, { useEffect } from 'react';
+import axios from 'axios';
+import { useParams, useNavigate } from 'react-router-dom';
+
+const JoinClass = () => {
+    const { classId } = useParams();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const joinClass = async () => {
+            try {
+                const token = localStorage.getItem('token'); // Obtener el token del localStorage
+                console.log("token" + token)
+                if (!token) {
+                    alert('You must be logged in to join the class');
+                    return;
+                }
+
+                const config = { headers: { Authorization: `${token}` } };
+                const response = await axios.post(`http://localhost:3000/api/v1/class/join/${classId}`, {}, config);
+
+                if (response.status === 200) {
+                    alert('Successfully joined the class');
+                    navigate(`/clase/${classId}`);
+                } else {
+                    alert('Failed to join the class');
+                }
+            } catch (error) {
+                console.error('Error joining class:', error);
+                alert('Error joining the class');
+            }
+        };
+
+        joinClass();
+    }, [classId, navigate]);
+
+    return (
+        <div>
+            <h1>Joining class...</h1>
+        </div>
+    );
+};
+
+export default JoinClass;
