@@ -35,10 +35,15 @@ const JoinClass = () => {
         joinClass();
     }, [classId, navigate]);
 
+
     return (
-        <div>
-            <h1>Joining class...</h1>
-        </div>
+        <Container className="d-flex flex-column justify-content-center align-items-center vh-100">
+            <h1 className="mb-4">Joining class...</h1>
+            <div className="mb-4">
+                <Button color="primary" size="lg" className="mr-3">Join</Button>
+                <Button color="secondary" size="lg">Cancel</Button>
+            </div>
+        </Container>
     );
 };
 

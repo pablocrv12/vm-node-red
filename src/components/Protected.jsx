@@ -1,12 +1,15 @@
-import React, { useEffect, useState } from 'react'; 
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Modal from 'react-modal';
-
+import Navbar from './Navbar';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { Container, Row, Col, Button } from 'react-bootstrap';
 const Protected = () => {
     const navigate = useNavigate();
     const [roleUser, setRoleUser] = useState('');
     const [userId, setUserId] = useState('');
+    const [userName, setUserName] = useState('');
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [classLink, setClassLink] = useState('');
 
@@ -42,14 +45,15 @@ const Protected = () => {
             console.log('Decoded Token:', decodedToken); // Para verificar el contenido del token
             if (decodedToken && decodedToken.id) {
                 setUserId(decodedToken.id);
-                axios.get(`http://localhost:3000/api/v1/user/rol/${decodedToken.id}`, {
+                axios.get(`http://localhost:3000/api/v1/user/${decodedToken.id}`, {
                     headers: {
                         Authorization: `${token}`
-                    } 
+                    }
                 })
                 .then(res => {
-                    // Aquí cogemos el rol del usuario
+                    // Aquí cogemos el rol y el nombre del usuario
                     setRoleUser(res.data.data.role);
+                    setUserName(res.data.data.name.split(' ')[0]);   
                 })
                 .catch(err => {
                     console.log(err);
@@ -118,37 +122,100 @@ const Protected = () => {
         }
     };
 
-    return (
+        return (
+            <div style={{ minHeight: '100vh', backgroundColor: '#f0f0f0' }}>
+                <Navbar />
+        
+                <div>
+                    <Container style={{ marginTop: '60px' }}>
+                        <Row style={{ marginBottom: '60px' }}>
+                            <Col>
+                                <h1>Bienvenido, {userName}</h1>
+                            </Col>
+                        </Row>
+                    </Container>
+                </div>
+        
+                <Container style={{ marginTop: '80px' }}>
+                    <Row style={{ marginBottom: '40px' }}>
+                        <Col md={6} style={{ textAlign: 'center' }}>
+                            <h1 style={{ textAlign: 'center', fontWeight: 'bold' }}>Clases</h1>
+                            <Row>
+                                <Col md={6}>
+                                    {roleUser === 'professor' && (
+                                        <div>
+                                            <h3 style={{ textAlign: 'center' }}>Crea una nueva clase</h3>
+                                            <Button onClick={() => navigate('/NuevaClase')} block className="dark-red-button">Nueva Clase</Button>
+                                        </div>
+                                    )}
+                                    {roleUser === 'student' && (
+                                        <div>
+                                            <h3 style={{ textAlign: 'center' }}>Únete a una clase</h3>
+                                            <Button onClick={openModal} block>Unirse</Button>
+                                        </div>
+                                    )}
+                                </Col>
+                                <Col md={6}>
+                                    <h3 style={{ textAlign: 'center' }}>Accede a tus clases</h3>
+                                    <Button onClick={() => navigate('/MisClases')} block>Mis Clases</Button>
+                                </Col>
+                            </Row>
+                        </Col>
+                        <Col md={6} style={{ textAlign: 'center' }}>
+                            <h1 style={{ textAlign: 'center', fontWeight: 'bold' }}>Node-RED</h1>
+                            <h2 style={{ textAlign: 'center' }}>Accede ya a Node-RED para empezar a crear y gestionar tus flujos de trabajo</h2>
+                            <Button onClick={handleAccessNodeRed}>Node-RED</Button>
+                            <div style={{ display: 'flex', justifyContent: 'center' }}>
+                            <img src="public\node-red.png" style={{ width: '80%', marginTop: '20px' }} />
+                            </div>
+                        </Col>
+                    </Row>
+                </Container>
+        
+                <Modal
+    isOpen={modalIsOpen}
+    onRequestClose={closeModal}
+    contentLabel="Unirse a una clase"
+    ariaHideApp={false}
+    style={{
+        overlay: {
+            backgroundColor: 'rgba(0, 0, 0, 0.5)', // Color y opacidad del fondo oscuro
+        },
+        content: {
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: '50%',
+            height: '50%',
+            padding: '20px',
+            backgroundColor: 'white',
+            borderRadius: '10px',
+        }
+    }}
+>
+    <div style={{ textAlign: 'center' }}>
+        <h2>Unirse a una clase</h2>
+        <input 
+            type="text" 
+            value={classLink} 
+            onChange={handleClassLinkChange} 
+            placeholder="Introduce el enlace de la clase"
+            style={{ width: '100%', marginBottom: '10px' }} // Establece el ancho del campo de texto al 100%
+        />
         <div>
-            <h1>Contenido protegido</h1>
-            <p>Hola, {roleUser}</p>
-            {roleUser === 'professor' && (
-                <button onClick={() => navigate('/NuevaClase')}>Nueva Clase</button>
-            )}
-            {roleUser === 'student' && (
-                <button onClick={openModal}>Unirse a una clase</button>
-            )}
-            <button onClick={() => navigate('/MisClases')}>Mis Clases</button>
-            <button onClick={handleLogout}>Cerrar sesión</button>
-            <button onClick={handleAccessNodeRed}>Acceder a Node-RED</button>
-            <Modal
-                isOpen={modalIsOpen}
-                onRequestClose={closeModal}
-                contentLabel="Unirse a una clase"
-                ariaHideApp={false} // Asegúrate de que esto esté configurado correctamente
-            >
-                <h2>Unirse a una clase</h2>
-                <input 
-                    type="text" 
-                    value={classLink} 
-                    onChange={handleClassLinkChange} 
-                    placeholder="Introduce el enlace de la clase"
-                />
-                <button onClick={handleJoinClass}>Aceptar</button>
-                <button onClick={closeModal}>Cancelar</button>
-            </Modal>
+            <Button onClick={handleJoinClass}>Aceptar</Button>
+            <Button onClick={closeModal} style={{ marginLeft: '10px' }}>Cancelar</Button>
         </div>
-    );
+    </div>
+</Modal>
+            </div>
+        );
+        
+    
+    
+    
+    
+    
 };
 
 export default Protected;

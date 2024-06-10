@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
+import Navbar from './Navbar';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { Container, Row, Col, Button } from 'react-bootstrap';
 
 const Clase = () => {
     const { classId } = useParams();
@@ -83,7 +86,19 @@ const Clase = () => {
     }
 
     const handleViewFlows = () => {
-        setShowModal(true);
+        navigate(`/clase/${classId}/flowsClase`);
+    };
+
+    const handleModificar = () => {
+        navigate(`/clase/${classId}/modificar`);
+    };
+
+    const handleSubirFlows = () => {
+        navigate(`/clase/${classId}/subirFlujo`);
+    };
+
+    const handleMisFlowsClase = () => {
+        navigate(`/clase/${classId}/MisFlowsClase`);
     };
 
     const handleCloseModal = () => {
@@ -144,44 +159,69 @@ const Clase = () => {
     if (error) return <p>{error}</p>;
 
     return (
-        <div>
-            <h1>Class Detail</h1>
-            {classDetail && (
-                <div>
-                    <h2>{classDetail.name}</h2>
-                    <p>Número de participantes: {classDetail.students.length}</p>
+        <div style={{ minHeight: '100vh', backgroundColor: '#f0f0f0' }}>
+            <Navbar />
+    
+            <Container style={{ marginTop: '60px' }}>
+                <Row style={{ marginBottom: '60px' }}>
+                    <Col>
+                        <h1 style={{ fontWeight: 'bold' }}>{classDetail.name}</h1>
+                    </Col>
+                </Row>
+            </Container>
+    
+            <Container style={{ marginTop: '80px' }}>
+                <Row style={{ marginBottom: '40px' }}>
+                    <Col md={6} style={{ textAlign: 'center' }}>
+                        {classDetail && (
+                            <div>
+                                
+                                {userRole === 'student' && (    
+                                    <div>
+                                        <h3>Entrega tus flujos de trabajo</h3>
+                                        <Button onClick={handleSubirFlows}>Subir Flujo</Button>
+                                        
+                                    </div>
+                                )}
+                                {userRole === 'professor' && (
+                                  <div>
+
+                                
+                                <h1 style={{ textAlign: 'center', fontWeight: 'bold' }}>Gestiona a tus Alumnos</h1>
+                                  <div style={{ marginBottom: '50px' }}>
+                                      <Button onClick={handleVerParticipantes} style={{ marginRight: '50px' }}>Ver Participantes</Button>
+                                      <Button onClick={handleNavigateToInvitation}>Invitar</Button>
+                                  </div>
+                                  <div>
+                                      
+                                  </div>
+                              </div>
+                                )}
+                            </div>
+                        )}
+                    </Col>
+                    <Col md={6} style={{ textAlign: 'center' }}>
                     {userRole === 'student' && (
-                        <div>
-                            <button onClick={handleViewFlows}>Subir Flujo</button>
-                            <button>Mis Flows</button>
-                        </div>
-                    )}
-                    {userRole === 'professor' && (
-                        <div>
-                            <button onClick={handleNavigateToInvitation}>Invitar Alumnos</button>
-                            <button onClick={handleViewFlows}>Ver Flows</button>
-                            <button onClick={handleVerParticipantes}>Ver Participantes</button>
-                        </div>
-                    )}
-                </div>
-            )}
-            {showModal && (
-                <div className="modal">
-                    <div className="modal-content">
-                        <span className="close" onClick={handleCloseModal}>&times;</span>
-                        <h2>Lista de Flujos</h2>
-                        <ul>
-                            {flows.map(flow => (
-                                <li key={flow._id}>
-                                    <span>{flow.name}</span>
-                                    <button onClick={() => handleEntregarFlujo(flow._id)}>Entregar</button>
-                                    <button onClick={() => handleEliminarFlujo(flow._id)}>Eliminar</button>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-                </div>
-            )}
+                                    <div>
+                                        <h3>Tus flujos de trabajo:</h3>
+                                        <Button onClick={handleMisFlowsClase}>Mis Flows</Button>
+                                        
+                                    </div>
+                                )}
+                                {userRole === 'professor' && (
+                                    <div>
+                            <h1 style={{ textAlign: 'center', fontWeight: 'bold' }}>Edita tu clase</h1>
+                            <Button onClick={handleModificar}>Modificar</Button>
+                            <h1 style={{ textAlign: 'center', fontWeight: 'bold', marginTop : '80px' }}>Flujos de trabajo</h1>
+                            <h2 style={{ textAlign: 'center' }}>Aquí puedes ver los flujos de trabajo subidos por alumnos</h2>
+                                        <Button onClick={handleViewFlows}>Ver Flows</Button>
+                                    </div>
+                                )}
+                    
+                    
+                    </Col>
+                </Row>
+            </Container>
         </div>
     );
 };
