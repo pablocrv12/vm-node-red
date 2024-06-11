@@ -6,8 +6,6 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -21,6 +19,7 @@ const defaultTheme = createTheme();
 export default function SignIn() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState(''); // Estado para manejar el mensaje de error
   const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
@@ -33,7 +32,7 @@ export default function SignIn() {
       navigate('/protected'); // Redirigir a la ruta protegida
     } catch (error) {
       console.error('Error al iniciar sesión:', error);
-      // Manejar el error de inicio de sesión aquí
+      setError('Usuario o contraseña incorrectos'); // Establecer el mensaje de error
     }
   };
 
@@ -55,6 +54,11 @@ export default function SignIn() {
           <Typography component="h1" variant="h5">
             Accede a tu cuenta
           </Typography>
+          {error && ( // Mostrar el mensaje de error si existe
+            <Typography color="error" variant="body2" sx={{ mt: 1 }}>
+              {error}
+            </Typography>
+          )}
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
             <TextField
               margin="normal"

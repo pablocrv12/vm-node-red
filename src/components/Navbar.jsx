@@ -42,13 +42,13 @@ const Navbar = () => {
     }
 };
 
-  return (
-    <nav className="navbar navbar-expand-lg navbar-dark" style={{ backgroundColor: '#8B0000', padding: '2rem 1.5rem' }}>
-      <div className="container-fluid">
-        <a className="navbar-brand" href="#">
-          <img src="../public/Node-RED.svg" alt="Logo de la App" width="40" height="40" className="d-inline-block align-top" />
-          Node-RED
-        </a>
+    return (
+      <nav className="navbar navbar-expand-lg navbar-dark" style={{ backgroundColor: '#8B0000', padding: '2rem 1.5rem' }}>
+        <div className="container-fluid">
+          <a className="navbar-brand" href="#">
+            <img src="../public/favicon.png" alt="Logo de la App" width="40" height="40" className="d-inline-block align-top" />
+            <span style={{ marginLeft: '0.3rem'}}> Multi Node-RED</span>
+          </a>
         <div className="ml-auto">
           {isAuthenticated ? (
             <>
@@ -62,7 +62,7 @@ const Navbar = () => {
               <button
                 className="btn"
                 style={{ backgroundColor: '#f0f0f0', color: '#8B0000', padding: '0.5rem 1rem', fontSize: '1rem', marginRight: '0.5rem' }}
-                onClick={() => navigate("/profile")}
+                onClick={() => navigate("/perfil")}
               >
                 Ver Perfil
               </button>
