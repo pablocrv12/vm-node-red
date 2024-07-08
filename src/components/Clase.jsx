@@ -203,18 +203,19 @@ const Clase = () => {
                     <Col md={6} style={{ textAlign: 'center' }}>
                     {userRole === 'student' && (
                                     <div>
-                                        <h3>Tus flujos de trabajo:</h3>
-                                        <Button onClick={handleMisFlowsClase}>Mis Flows</Button>
+                                        <h3>Aquí podrás ver los flujos de trabajo compartidos por el profesor de la clase:</h3>
+                                        <Button onClick={handleMisFlowsClase}>Flujos</Button>
                                         
                                     </div>
                                 )}
                                 {userRole === 'professor' && (
                                     <div>
                             <h1 style={{ textAlign: 'center', fontWeight: 'bold' }}>Edita tu clase</h1>
-                            <Button onClick={handleModificar}>Modificar</Button>
+                            <Button onClick={handleModificar}>Guardar cambios</Button>
                             <h1 style={{ textAlign: 'center', fontWeight: 'bold', marginTop : '80px' }}>Flujos de trabajo</h1>
-                            <h2 style={{ textAlign: 'center' }}>Aquí puedes ver los flujos de trabajo subidos por alumnos</h2>
-                                        <Button onClick={handleViewFlows}>Ver Flows</Button>
+                            <h2 style={{ textAlign: 'center' }}>Aquí puedes publicar flujos en tus clases o ver los flujos de los alumnos</h2>
+                                        <Button onClick={handleViewFlows} style={{ marginRight: '50px' }}>Ver Flujos</Button>
+                                        <Button onClick={handleSubirFlows}>Publicar Flujo</Button>
                                     </div>
                                 )}
                     

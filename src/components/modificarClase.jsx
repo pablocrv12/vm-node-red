@@ -98,7 +98,7 @@ const ModificarClase = () => {
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
                         >
-                            Modificar
+                            Guardar cambios
                         </Button>
                     </Box>
                 </Box>

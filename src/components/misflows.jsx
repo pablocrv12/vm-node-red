@@ -15,7 +15,7 @@ const MisFlows = () => {
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token) {
-            axios.get(`http://localhost:3000/api/v1/class/${classId}/flowsStudent`, {
+            axios.get(`http://localhost:3000/api/v1/class/${classId}/flows`, {
                 headers: { Authorization: `${token}` }
             })
             .then(response => {
