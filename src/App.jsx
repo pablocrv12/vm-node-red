@@ -4,7 +4,7 @@ import Navbar from './components/Navbar';
 import Login from './components/Login';
 import Protected from './components/Protected';
 import Register from './components/Register';
-import MisClases from './components/misclases';
+import MisClases from './components/MisClases';
 import InvitacionClase from './components/InvitacionClase';
 import NuevaClase from './components/NuevaClase';
 import Clase from './components/Clase';
@@ -85,7 +85,7 @@ const App = () => {
           <Route path='/register' element={<Register />} />
           <Route path='/invitacionClase/:classId' element={<InvitacionClase />} />
           <Route path='/nuevaClase' element={<NuevaClase />} />
-          <Route path='/misClases' element={<MisClases />} />
+          <Route path='/MisClases' element={<MisClases />} />
           <Route path='/clase/:classId' element={<Clase />} />
           <Route path='/clase/:classId/modificar' element={<ModificarClase />} />
           <Route path="/clase/:classId/flowsClase" element={<FlowsClase />} />
