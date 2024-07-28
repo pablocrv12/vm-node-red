@@ -17,7 +17,7 @@ const SubirFlujo = () => {
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token) {
-            axios.get(`http://localhost:3000/api/v1/flow`, {
+            axios.get(`https://backend-service-3flglcef2q-ew.a.run.app/api/v1/flow`, {
                 headers: { Authorization: `${token}` }
             })
             .then(response => {
@@ -31,7 +31,7 @@ const SubirFlujo = () => {
             });
     
             Promise.all(flows.map(flow => {
-                return axios.get(`http://localhost:3000/api/v1/flow/classes/${flow._id}`, {
+                return axios.get(`https://backend-service-3flglcef2q-ew.a.run.app/api/v1/flow/classes/${flow._id}`, {
                     headers: { Authorization: `${token}` }
                 });
             })).then(responses => {
@@ -53,7 +53,7 @@ const SubirFlujo = () => {
     const confirmUploadFlow = () => {
         const token = localStorage.getItem('token');
         if (token) {
-            axios.post(`http://localhost:3000/api/v1/class/${classId}/uploadFlow/${flowIdToUpload}`, null, {
+            axios.post(`https://backend-service-3flglcef2q-ew.a.run.app/api/v1/class/${classId}/uploadFlow/${flowIdToUpload}`, null, {
                 headers: { Authorization: `${token}` }
             })
             .then(response => {

@@ -21,7 +21,7 @@ const InvitacionClase = ({ className }) => {
         e.preventDefault();
         const recipientEmails = emails.split(',').map(email => email.trim());
         try {
-            await axios.post('http://localhost:3000/api/v1/class/send-invite', { recipientEmails, className, classId });
+            await axios.post('https://backend-service-3flglcef2q-ew.a.run.app/api/v1/class/send-invite', { recipientEmails, className, classId });
             alert('Invitations sent successfully');
         } catch (error) {
             console.error('Error sending invitations:', error);

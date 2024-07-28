@@ -26,7 +26,7 @@ export default function SignIn() {
     event.preventDefault();
 
     try {
-      const response = await axios.post("http://localhost:3000/login", { email, password });
+      const response = await axios.post("https://backend-service-3flglcef2q-ew.a.run.app/login", { email, password });
       const { token } = response.data;
       localStorage.setItem('token', token); // Almacenar token en localStorage
       navigate('/protected'); // Redirigir a la ruta protegida

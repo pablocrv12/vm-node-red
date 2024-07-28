@@ -18,7 +18,7 @@ const JoinClass = () => {
                 }
 
                 const config = { headers: { Authorization: `${token}` } };
-                const response = await axios.post(`http://localhost:3000/api/v1/class/join/${classId}`, {}, config);
+                const response = await axios.post(`https://backend-service-3flglcef2q-ew.a.run.app/api/v1/class/join/${classId}`, {}, config);
 
                 if (response.status === 200) {
                     alert('Successfully joined the class');

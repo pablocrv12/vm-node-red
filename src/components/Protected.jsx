@@ -21,7 +21,7 @@ const Protected = () => {
     const handleAccessNodeRed = async () => {
         const token = localStorage.getItem('token');
         try {
-            const response = await axios.post("http://localhost:3000/start-nodered", {}, {
+            const response = await axios.post("https://backend-service-3flglcef2q-ew.a.run.app/start-nodered", {}, {
                 headers: {
                     Authorization: `${token}`
                 }
@@ -45,7 +45,7 @@ const Protected = () => {
             console.log('Decoded Token:', decodedToken); // Para verificar el contenido del token
             if (decodedToken && decodedToken.id) {
                 setUserId(decodedToken.id);
-                axios.get(`http://localhost:3000/api/v1/user/${decodedToken.id}`, {
+                axios.get(`https://backend-service-3flglcef2q-ew.a.run.app/api/v1/user/${decodedToken.id}`, {
                     headers: {
                         Authorization: `${token}`
                     }

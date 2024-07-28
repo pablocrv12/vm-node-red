@@ -16,7 +16,7 @@ const FlowsClase = () => {
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token) {
-            axios.get(`http://localhost:3000/api/v1/class/${classId}/flows`, {
+            axios.get(`https://backend-service-3flglcef2q-ew.a.run.app/api/v1/class/${classId}/flows`, {
                 headers: {
                     Authorization: `${token}`
                 }
@@ -25,7 +25,7 @@ const FlowsClase = () => {
                 const flowsData = response.data.data;
                 for (const flow of flowsData) {
                     try {
-                        const userResponse = await axios.get(`http://localhost:3000/api/v1/flow/user/${flow._id}`, {
+                        const userResponse = await axios.get(`https://backend-service-3flglcef2q-ew.a.run.app/api/v1/flow/user/${flow._id}`, {
                             headers: {
                                 Authorization: `${token}`
                             }
@@ -60,7 +60,7 @@ const FlowsClase = () => {
         try {
             const token = localStorage.getItem('token');
             if (token) {
-                await axios.delete(`http://localhost:3000/api/v1/class/${classId}/deleteFlow/${flowIdToDelete}`, {
+                await axios.delete(`https://backend-service-3flglcef2q-ew.a.run.app/api/v1/class/${classId}/deleteFlow/${flowIdToDelete}`, {
                     headers: {
                         Authorization: `${token}`
                     }

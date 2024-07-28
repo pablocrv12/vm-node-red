@@ -21,7 +21,7 @@ const Clase = () => {
         if (token) {
             const decodedToken = parseJwt(token);
             if (decodedToken) {
-                axios.get(`http://localhost:3000/api/v1/class/${classId}`, {
+                axios.get(`https://backend-service-3flglcef2q-ew.a.run.app/api/v1/class/${classId}`, {
                     headers: {
                         Authorization: `${token}`
                     }
@@ -36,7 +36,7 @@ const Clase = () => {
                     setLoading(false);
                 });
 
-                axios.get(`http://localhost:3000/api/v1/user/rol/${decodedToken.id}`, {
+                axios.get(`https://backend-service-3flglcef2q-ew.a.run.app/api/v1/user/rol/${decodedToken.id}`, {
                     headers: {
                         Authorization: `${token}`
                     } 
@@ -50,7 +50,7 @@ const Clase = () => {
                     setLoading(false);
                 });
 
-                axios.get(`http://localhost:3000/api/v1/class/${classId}/flows`, {
+                axios.get(`https://backend-service-3flglcef2q-ew.a.run.app/api/v1/class/${classId}/flows`, {
                     headers: {
                         Authorization: `${token}`
                     }
@@ -119,7 +119,7 @@ const Clase = () => {
         
         const token = localStorage.getItem('token');
         if (token) {
-            axios.post(`http://localhost:3000/api/v1/class/${classId}/flow/${flowId}`, null, {
+            axios.post(`https://backend-service-3flglcef2q-ew.a.run.app/api/v1/class/${classId}/flow/${flowId}`, null, {
                 headers: {
                     Authorization: `${token}`
                 }
@@ -138,7 +138,7 @@ const Clase = () => {
     const handleEliminarFlujo = (flowId) => {
         const token = localStorage.getItem('token');
         if (token) {
-            axios.delete(`http://localhost:3000/api/v1/class/${classId}/deleteFlow/${flowId}`, {
+            axios.delete(`https://backend-service-3flglcef2q-ew.a.run.app/api/v1/class/${classId}/deleteFlow/${flowId}`, {
                 headers: {
                     Authorization: `${token}`
                 }

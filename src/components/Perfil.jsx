@@ -35,7 +35,7 @@ const Perfil = () => {
       console.log('Decoded Token:', decodedToken);
       if (decodedToken && decodedToken.id) {
         setUserId(decodedToken.id);
-        axios.get(`http://localhost:3000/api/v1/user/${decodedToken.id}`, {
+        axios.get(`https://backend-service-3flglcef2q-ew.a.run.app/api/v1/user/${decodedToken.id}`, {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -76,7 +76,7 @@ const Perfil = () => {
 
     const token = localStorage.getItem('token');
     if (token && userId) {
-      axios.patch(`http://localhost:3000/api/v1/user/${userId}`, updatedUser, {
+      axios.patch(`https://backend-service-3flglcef2q-ew.a.run.app/api/v1/user/${userId}`, updatedUser, {
         headers: {
           Authorization: `${token}`
         }
@@ -94,7 +94,7 @@ const Perfil = () => {
 
   const handleDelete = async () => {
     try {
-      await axios.delete(`http://localhost:3000/api/v1/user/${userId}`, {
+      await axios.delete(`https://backend-service-3flglcef2q-ew.a.run.app/api/v1/user/${userId}`, {
         headers: {
           Authorization: `${localStorage.getItem('token')}`
         }

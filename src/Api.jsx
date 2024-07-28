@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const baseUrl = 'http://localhost:3000/api/v1/flow';
+const baseUrl = 'https://backend-service-3flglcef2q-ew.a.run.app/api/v1/flow';
 
 export const getAllFlows = async () => {
   try {

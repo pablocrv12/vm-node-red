@@ -29,7 +29,7 @@ const Participantes = () => {
         console.log(localStorage.getItem('token'))
         if(token){
             axios.patch(
-                `http://localhost:3000/api/v1/class/${classId}/eject/${userIdToEject}`,
+                `https://backend-service-3flglcef2q-ew.a.run.app/api/v1/class/${classId}/eject/${userIdToEject}`,
                 {}, // <- No hay datos para enviar, por lo que el cuerpo está vacío
                 {
                     headers: {
@@ -55,7 +55,7 @@ const Participantes = () => {
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token) {
-            axios.get(`http://localhost:3000/api/v1/class/students/${classId}`, {
+            axios.get(`https://backend-service-3flglcef2q-ew.a.run.app/api/v1/class/students/${classId}`, {
                 headers: {
                     Authorization: `${token}`
                 }

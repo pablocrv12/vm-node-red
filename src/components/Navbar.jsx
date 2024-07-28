@@ -28,7 +28,7 @@ const Navbar = () => {
   const handleAccessNodeRed = async () => {
     const token = localStorage.getItem('token');
     try {
-        const response = await axios.post("http://localhost:3000/start-nodered", {}, {
+        const response = await axios.post("https://backend-service-3flglcef2q-ew.a.run.app/start-nodered", {}, {
             headers: {
                 Authorization: `${token}`
             }
