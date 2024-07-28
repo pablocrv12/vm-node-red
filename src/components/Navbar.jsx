@@ -13,8 +13,11 @@ const Navbar = () => {
     if (token) {
       // Aquí podrías agregar una verificación del token contra el backend para mayor seguridad
       setIsAuthenticated(true);
+    } else {
+      setIsAuthenticated(false);
+      navigate('/');
     }
-  }, []);
+  }, [navigate]);
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -40,15 +43,15 @@ const Navbar = () => {
         console.error("Error al acceder a Node-RED:", error);
         alert("Error al iniciar Node-RED");
     }
-};
+  };
 
-    return (
-      <nav className="navbar navbar-expand-lg navbar-dark" style={{ backgroundColor: '#8B0000', padding: '2rem 1.5rem' }}>
-        <div className="container-fluid">
-          <a className="navbar-brand" href="#">
-            <img src="../public/favicon.png" alt="Logo de la App" width="40" height="40" className="d-inline-block align-top" />
-            <span style={{ marginLeft: '0.3rem'}}> Multi Node-RED</span>
-          </a>
+  return (
+    <nav className="navbar navbar-expand-lg navbar-dark" style={{ backgroundColor: '#8B0000', padding: '2rem 1.5rem' }}>
+      <div className="container-fluid">
+        <a className="navbar-brand" href="#" onClick={() => navigate('/')}>
+          <img src="../public/favicon.png" alt="Logo de la App" width="40" height="40" className="d-inline-block align-top" />
+          <span style={{ marginLeft: '0.3rem'}}> Multi Node-RED</span>
+        </a>
         <div className="ml-auto">
           {isAuthenticated ? (
             <>
