@@ -23,12 +23,14 @@ const Protected = () => {
         try {
             const response = await axios.post("https://backend-service-3flglcef2q-ew.a.run.app/start-nodered", {}, {
                 headers: {
-                    Authorization: `${token}`
+                    Authorization: `${token}` // Asegúrate de que el token está en el formato correcto
                 }
             });
-            console.log(response.data);
+    
             if (response.data.success) {
-                window.location.href = `http://localhost:1880`;
+                print(response.data.url)
+                // Redirigir al usuario a la URL de la instancia de Node-RED
+                window.location.href = response.data.url;
             } else {
                 alert("Error al iniciar Node-RED");
             }
