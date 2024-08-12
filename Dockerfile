@@ -2,13 +2,17 @@
 FROM node:latest
 
 # Instala git
-RUN apt-get update && apt-get install -y git && apt-get clean
+# RUN apt-get update && apt-get install -y git && apt-get clean
 
-RUN git clone --branch Production https://github.com/pablocrv12/vm-node-red
+# RUN git clone --branch Production https://github.com/pablocrv12/vm-node-red
 
 WORKDIR /vm-node-red
 
+COPY package*.json ./
+
 RUN npm install
+
+COPY . .
 
 # Construye la aplicación de React
 RUN npm run build
