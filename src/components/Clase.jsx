@@ -4,8 +4,12 @@ import { useParams, useNavigate } from 'react-router-dom';
 import Navbar from './Navbar';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container, Row, Col, Button } from 'react-bootstrap';
+import checkAuth from './checkAuth';
 
 const Clase = () => {
+
+    checkAuth();
+
     const { classId } = useParams();
     const [classDetail, setClassDetail] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -21,7 +25,7 @@ const Clase = () => {
         if (token) {
             const decodedToken = parseJwt(token);
             if (decodedToken) {
-                axios.get(`https://backend-service-3flglcef2q-ew.a.run.app/api/v1/class/${classId}`, {
+                axios.get(`https://backend-service-830425129942.europe-west1.run.app/api/v1/class/${classId}`, {
                     headers: {
                         Authorization: `${token}`
                     }
@@ -36,7 +40,7 @@ const Clase = () => {
                     setLoading(false);
                 });
 
-                axios.get(`https://backend-service-3flglcef2q-ew.a.run.app/api/v1/user/rol/${decodedToken.id}`, {
+                axios.get(`https://backend-service-830425129942.europe-west1.run.app/api/v1/user/rol/${decodedToken.id}`, {
                     headers: {
                         Authorization: `${token}`
                     } 
@@ -50,7 +54,7 @@ const Clase = () => {
                     setLoading(false);
                 });
 
-                axios.get(`https://backend-service-3flglcef2q-ew.a.run.app/api/v1/class/${classId}/flows`, {
+                axios.get(`https://backend-service-830425129942.europe-west1.run.app/api/v1/class/${classId}/flows`, {
                     headers: {
                         Authorization: `${token}`
                     }
@@ -119,7 +123,7 @@ const Clase = () => {
         
         const token = localStorage.getItem('token');
         if (token) {
-            axios.post(`https://backend-service-3flglcef2q-ew.a.run.app/api/v1/class/${classId}/flow/${flowId}`, null, {
+            axios.post(`https://backend-service-830425129942.europe-west1.run.app/api/v1/class/${classId}/flow/${flowId}`, null, {
                 headers: {
                     Authorization: `${token}`
                 }
@@ -138,7 +142,7 @@ const Clase = () => {
     const handleEliminarFlujo = (flowId) => {
         const token = localStorage.getItem('token');
         if (token) {
-            axios.delete(`https://backend-service-3flglcef2q-ew.a.run.app/api/v1/class/${classId}/deleteFlow/${flowId}`, {
+            axios.delete(`https://backend-service-830425129942.europe-west1.run.app/api/v1/class/${classId}/deleteFlow/${flowId}`, {
                 headers: {
                     Authorization: `${token}`
                 }
@@ -204,7 +208,7 @@ const Clase = () => {
                     {userRole === 'student' && (
                                     <div>
                                         <h3>Aquí podrás ver los flujos de trabajo compartidos por el profesor de la clase:</h3>
-                                        <Button onClick={handleMisFlowsClase}>Flujos</Button>
+                                        <Button onClick={handleViewFlows}>Flujos</Button>
                                         
                                     </div>
                                 )}

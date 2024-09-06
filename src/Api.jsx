@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const baseUrl = 'https://backend-service-3flglcef2q-ew.a.run.app/api/v1/flow';
+const baseUrl = 'https://backend-service-830425129942.europe-west1.run.app/api/v1/flow';
 
 export const getAllFlows = async () => {
   try {
@@ -29,7 +29,6 @@ export const createNewFlow = async (datos) => {
     // Devuelve los datos del recurso creado si la solicitud es exitosa
     return response.data;
   } catch (error) {
-    // Maneja cualquier error que ocurra durante la solicitud
     console.error('Error al crear el recurso:', error);
     throw error;
   }

@@ -26,7 +26,7 @@ export default function SignIn() {
     event.preventDefault();
 
     try {
-      const response = await axios.post("https://backend-service-3flglcef2q-ew.a.run.app/login", { email, password });
+      const response = await axios.post("https://backend-service-830425129942.europe-west1.run.app/login", { email, password });
       const { token } = response.data;
       localStorage.setItem('token', token); // Almacenar token en localStorage
       navigate('/protected'); // Redirigir a la ruta protegida
@@ -94,7 +94,7 @@ export default function SignIn() {
             </Button>
             <Grid container>
               <Grid item xs>
-                <Link href="#" variant="body2">
+              <Link href="#" variant="body2" onClick={() => navigate('/resetPassword')}>
                   ¿Has olvidado tu contraseña?
                 </Link>
               </Grid>

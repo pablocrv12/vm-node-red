@@ -10,10 +10,14 @@ import SchoolIcon from '@mui/icons-material/School';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import checkAuth from './checkAuth';
 
 const defaultTheme = createTheme();
 
 const NuevaClase = () => {
+
+    checkAuth();
+    
     const [className, setClassName] = useState('');
     const navigate = useNavigate();
 
@@ -22,7 +26,7 @@ const NuevaClase = () => {
         const token = localStorage.getItem('token');
         if (token) {
             axios.post(
-                'https://backend-service-3flglcef2q-ew.a.run.app/api/v1/class', 
+                'https://backend-service-830425129942.europe-west1.run.app/api/v1/class', 
                 { name: className }, 
                 { headers: { Authorization: `${token}` } }
             )

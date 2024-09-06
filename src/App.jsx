@@ -17,18 +17,46 @@ import ModificarClase from "./components/modificarClase";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import Perfil from "./components/Perfil";
+import checkAuth from './components/checkAuth';
+import ResetPassword from './components/ResetPassword';
+import ChangePassword from './components/ChangePassword';
 
 const Home = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem('token');
+    
     if (token) {
-      // Aquí puedes agregar lógica adicional para verificar el token si es necesario
-      // Por ejemplo, una llamada a tu backend para validar el token
-      navigate('/protected');
+      const decodedToken = parseJwt(token);
+      const isExpired = Date.now() >= decodedToken.exp * 1000;
+
+      if (isExpired) {
+        console.log('Token has expired');
+        localStorage.removeItem('token');
+        navigate('/'); // Redirige al usuario a la página de login si el token ha expirado
+      } else {
+        // El token es válido, opcionalmente puedes hacer alguna acción adicional aquí
+        navigate('/protected');
+      }
+    } else {
+      navigate('/'); // Redirige al usuario a la página de login si no existe un token
     }
   }, [navigate]);
+
+  function parseJwt(token) {
+    try {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+        return JSON.parse(jsonPayload);
+    } catch (error) {
+        console.error('Error parsing JWT:', error);
+        return null;
+    }
+}
 
   return (
     <div style={{ minHeight: '100vh', backgroundColor: '#f0f0f0' }}>
@@ -64,7 +92,7 @@ const Home = () => {
                     <h2 style={{ textAlign: 'center' }}>Regístrate y empieza ya a trabajar con Node-RED</h2>
                     
                     <div style={{ display: 'flex', justifyContent: 'center' }}>
-                    <img src="public\node-red.png" style={{ width: '80%', marginTop: '20px' }} />
+                    <img src="/node-red.png" style={{ width: '80%', marginTop: '20px' }} />
                     </div>
                 </Col>
             </Row>
@@ -83,6 +111,8 @@ const App = () => {
           <Route path='/perfil' element={<Perfil />} />
           <Route path='/protected' element={<Protected />} />
           <Route path='/register' element={<Register />} />
+          <Route path='/resetPassword' element={<ResetPassword />} />
+          <Route path='/changePassword' element={<ChangePassword />} />
           <Route path='/invitacionClase/:classId' element={<InvitacionClase />} />
           <Route path='/nuevaClase' element={<NuevaClase />} />
           <Route path='/MisClases' element={<MisClases />} />

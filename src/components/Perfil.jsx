@@ -17,25 +17,30 @@ import axios from 'axios';
 import Navbar from './Navbar';
 import Modal from 'react-bootstrap/Modal';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import checkAuth from './checkAuth';
 
 const defaultTheme = createTheme();
 
 const Perfil = () => {
+
+  checkAuth();
+  
   const navigate = useNavigate();
   const [currentName, setCurrentName] = useState('');
   const [currentEmail, setCurrentEmail] = useState('');
   const [currentPassword, setCurrentPassword] = useState('');
   const [userId, setUserId] = useState('');
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+  const [currentPasswordInput, setCurrentPasswordInput] = useState('');
+  const [newPasswordInput, setNewPasswordInput] = useState('');
 
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
       const decodedToken = parseJwt(token);
-      console.log('Decoded Token:', decodedToken);
       if (decodedToken && decodedToken.id) {
         setUserId(decodedToken.id);
-        axios.get(`https://backend-service-3flglcef2q-ew.a.run.app/api/v1/user/${decodedToken.id}`, {
+        axios.get(`https://backend-service-830425129942.europe-west1.run.app/api/v1/user/${decodedToken.id}`, {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -76,9 +81,9 @@ const Perfil = () => {
 
     const token = localStorage.getItem('token');
     if (token && userId) {
-      axios.patch(`https://backend-service-3flglcef2q-ew.a.run.app/api/v1/user/${userId}`, updatedUser, {
+      axios.patch(`https://backend-service-830425129942.europe-west1.run.app/api/v1/user/${userId}`, updatedUser, {
         headers: {
-          Authorization: `${token}`
+          Authorization: `Bearer ${token}`
         }
       })
       .then(response => {
@@ -92,11 +97,45 @@ const Perfil = () => {
     }
   };
 
+  const handleChangePassword = (event) => {
+    event.preventDefault();
+
+    if (!currentPasswordInput || !newPasswordInput) {
+        alert('Por favor, complete ambos campos de contraseña.');
+        return;
+    }
+
+    const token = localStorage.getItem('token');
+    if (token && userId) {
+        const updateData = {
+            currentPassword: currentPasswordInput,
+            newPassword: newPasswordInput,
+        };
+
+        axios.patch(`https://backend-service-830425129942.europe-west1.run.app/api/v1/user/${userId}`, updateData, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
+        .then(response => {
+            console.log('Contraseña actualizada:', response.data);
+            alert('Contraseña actualizada con éxito');
+            // Limpiar los campos de contraseña
+            setCurrentPasswordInput('');
+            setNewPasswordInput('');
+        })
+        .catch(error => {
+            console.error('Error al cambiar la contraseña:', error);
+            alert('Hubo un error al cambiar la contraseña. Verifique su contraseña actual.');
+        });
+    }
+  };
+
   const handleDelete = async () => {
     try {
-      await axios.delete(`https://backend-service-3flglcef2q-ew.a.run.app/api/v1/user/${userId}`, {
+      await axios.delete(`https://backend-service-830425129942.europe-west1.run.app/api/v1/user/${userId}`, {
         headers: {
-          Authorization: `${localStorage.getItem('token')}`
+          Authorization: `Bearer ${localStorage.getItem('token')}`
         }
       });
       localStorage.removeItem('token');
@@ -108,7 +147,7 @@ const Perfil = () => {
 
   return (
     <ThemeProvider theme={defaultTheme}>
-      <Navbar></Navbar>
+      <Navbar />
       <Grid container component="main" sx={{ height: '100vh' }}>
         <CssBaseline />
         <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
@@ -129,7 +168,6 @@ const Perfil = () => {
             </Typography>
             <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
               <FormControl fullWidth margin="normal" variant="outlined">
-                <InputLabel htmlFor="nombre"></InputLabel>
                 <TextField
                   variant="outlined"
                   id="nombre"
@@ -142,7 +180,6 @@ const Perfil = () => {
                 />
               </FormControl>
               <FormControl fullWidth margin="normal" variant="outlined">
-                <InputLabel htmlFor="email"></InputLabel>
                 <TextField
                   variant="outlined"
                   id="email"
@@ -163,15 +200,49 @@ const Perfil = () => {
               >
                 Guardar cambios
               </Button>
-              <Grid container>
-                <Grid item xs>
-                </Grid>
-                <Grid item>
-                </Grid>
-              </Grid>
+            </Box>
+
+            <Typography component="h1" variant="h5" sx={{ mt: 4 }}>
+              Cambiar Contraseña
+            </Typography>
+            <Box component="form" noValidate onSubmit={handleChangePassword} sx={{ mt: 1 }}>
+              <FormControl fullWidth margin="normal" variant="outlined">
+                <TextField
+                  variant="outlined"
+                  id="currentPassword"
+                  name="currentPassword"
+                  type="password"
+                  autoComplete="current-password"
+                  autoFocus
+                  value={currentPasswordInput}
+                  onChange={(e) => setCurrentPasswordInput(e.target.value)}
+                  label="Contraseña Actual"
+                />
+              </FormControl>
+              <FormControl fullWidth margin="normal" variant="outlined">
+                <TextField
+                  variant="outlined"
+                  id="newPassword"
+                  name="newPassword"
+                  type="password"
+                  autoComplete="new-password"
+                  value={newPasswordInput}
+                  onChange={(e) => setNewPasswordInput(e.target.value)}
+                  label="Nueva Contraseña"
+                />
+              </FormControl>
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+              >
+                Guardar cambios
+              </Button>
             </Box>
           </Box>
         </Grid>
+
         <Grid
           item
           xs={false}
@@ -223,7 +294,6 @@ const Perfil = () => {
           </Modal>
         </Grid>
       </Grid>
-
     </ThemeProvider>
   );
 };

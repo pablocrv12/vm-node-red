@@ -1,31 +1,26 @@
 # Usa una imagen base de Node.js
 FROM node:latest
 
-# Instala git
-# RUN apt-get update && apt-get install -y git && apt-get clean
-
-# RUN git clone --branch Production https://github.com/pablocrv12/vm-node-red
-
+# Establece el directorio de trabajo dentro del contenedor
 WORKDIR /vm-node-red
 
+# Copia los archivos package.json y package-lock.json al directorio de trabajo en el contenedor
 COPY package*.json ./
 
+# Instala las dependencias de la aplicación
 RUN npm install
 
+# Copia todo el código fuente de la aplicación al directorio de trabajo en el contenedor
 COPY . .
 
 # Construye la aplicación de React
 RUN npm run build
 
-# Instala un servidor web simple para servir la aplicación estática
+# Instala el paquete `serve` globalmente para servir archivos estáticos
 RUN npm install -g serve
 
-# Expone el puerto en el que correrá la aplicación
+# Expone el puerto 8080 en el contenedor
 EXPOSE 8080
 
-# Comando para correr la aplicación usando 'serve'
+# Define el comando por defecto para ejecutar cuando el contenedor se inicie
 CMD ["serve", "-s", "dist", "-l", "8080"]
-
-# construir con: docker build --no-cache -t vm-node-red:latest .
-
-# ejecutar con: docker run -d --name vm-nodered -p 8080:8080 vm-node-red:latest

@@ -5,61 +5,33 @@ import Modal from 'react-modal';
 import Navbar from './Navbar';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container, Row, Col, Button } from 'react-bootstrap';
+import checkAuth from './checkAuth';
+import { handleAccessNodeRed } from '../utils/nodeRedUtils';
+
 const Protected = () => {
+    checkAuth();
+    
     const navigate = useNavigate();
     const [roleUser, setRoleUser] = useState('');
     const [userId, setUserId] = useState('');
     const [userName, setUserName] = useState('');
     const [modalIsOpen, setModalIsOpen] = useState(false);
-    const [classLink, setClassLink] = useState('');
+    const [classId, setClassId] = useState('');  // Cambiado de classLink a classId
     const [loading, setLoading] = useState(false);
-
-    const handleLogout = () => {
-        localStorage.removeItem('token');
-        navigate('/');
-    };
-
-    const handleAccessNodeRed = async () => {
-        const token = localStorage.getItem('token');
-        try {
-            // Mostrar el spinner de carga
-            setLoading(true);
-    
-            const response = await axios.post("https://backend-service-3flglcef2q-ew.a.run.app/start-nodered", {}, {
-                headers: {
-                    Authorization: `${token}` // Asegúrate de que el token está en el formato correcto
-                }
-            });
-    
-            if (response.data.success) {
-                // Redirigir al usuario a la URL de la instancia de Node-RED
-                window.location.href = response.data.url;
-            } else {
-                alert("Error al iniciar Node-RED");
-            }
-        } catch (error) {
-            console.error("Error al acceder a Node-RED:", error);
-            alert("Error al iniciar Node-RED");
-        } finally {
-            // Ocultar el spinner de carga
-            setLoading(false);
-        }
-    };
 
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token) {
             const decodedToken = parseJwt(token);
-            console.log('Decoded Token:', decodedToken); // Para verificar el contenido del token
+            console.log('Decoded Token:', decodedToken);
             if (decodedToken && decodedToken.id) {
                 setUserId(decodedToken.id);
-                axios.get(`https://backend-service-3flglcef2q-ew.a.run.app/api/v1/user/${decodedToken.id}`, {
+                axios.get(`https://backend-service-830425129942.europe-west1.run.app/api/v1/user/${decodedToken.id}`, {
                     headers: {
                         Authorization: `${token}`
                     }
                 })
                 .then(res => {
-                    // Aquí cogemos el rol y el nombre del usuario
                     setRoleUser(res.data.data.role);
                     setUserName(res.data.data.name.split(' ')[0]);   
                 })
@@ -96,20 +68,22 @@ const Protected = () => {
 
     const closeModal = () => {
         setModalIsOpen(false);
-        setClassLink('');
+        setClassId('');  // Cambiado de classLink a classId
     };
 
-    const handleClassLinkChange = (event) => {
-        setClassLink(event.target.value);
+    const handleClassIdChange = (event) => {
+        setClassId(event.target.value);  // Cambiado de classLink a classId
     };
 
     const handleJoinClass = async () => {
         const token = localStorage.getItem('token');
 
-        if (!classLink) {
-            alert('Por favor, introduce el enlace de la clase');
+        if (!classId) {  // Cambiado de classLink a classId
+            alert('Por favor, introduce el código de la clase');
             return;
         }
+
+        const classLink = `https://backend-service-830425129942.europe-west1.run.app/api/v1/class/join/${classId}`;
 
         try {
             const response = await axios.post(classLink, {}, {
@@ -120,7 +94,6 @@ const Protected = () => {
             if (response.status === 200) {
                 alert('Te has unido a la clase exitosamente');
                 closeModal();
-                // Aquí puedes añadir lógica adicional si es necesario, como redireccionar a la página de la clase
             } else {
                 alert('Error al unirse a la clase');
             }
@@ -134,7 +107,6 @@ const Protected = () => {
         <div style={{ minHeight: '100vh', backgroundColor: '#f0f0f0' }}>
             <Navbar />
             
-            {/* Spinner y mensaje de carga */}
             {loading && (
                 <div style={{
                     textAlign: 'center',
@@ -149,7 +121,7 @@ const Protected = () => {
                     padding: '20px',
                     borderRadius: '10px',
                     boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
-                    zIndex: 1000, // Asegúrate de que esté por encima de otros contenidos
+                    zIndex: 1000,
                 }}>
                     <div style={{
                         border: '4px solid rgba(0, 0, 0, 0.1)',
@@ -202,9 +174,9 @@ const Protected = () => {
                     <Col md={6} style={{ textAlign: 'center' }}>
                         <h1 style={{ textAlign: 'center', fontWeight: 'bold' }}>Node-RED</h1>
                         <h2 style={{ textAlign: 'center' }}>Accede ya a Node-RED para empezar a crear y gestionar tus flujos de trabajo</h2>
-                        <Button onClick={handleAccessNodeRed}>Node-RED</Button>
+                        <Button onClick={() => handleAccessNodeRed(setLoading)}>Node-RED</Button>
                         <div style={{ display: 'flex', justifyContent: 'center' }}>
-                            <img src="public/node-red.png" style={{ width: '80%', marginTop: '20px' }} />
+                            <img src="/node-red.png" style={{ width: '80%', marginTop: '20px' }} />
                         </div>
                     </Col>
                 </Row>
@@ -217,7 +189,7 @@ const Protected = () => {
                 ariaHideApp={false}
                 style={{
                     overlay: {
-                        backgroundColor: 'rgba(0, 0, 0, 0.5)', // Color y opacidad del fondo oscuro
+                        backgroundColor: 'rgba(0, 0, 0, 0.5)',
                     },
                     content: {
                         display: 'flex',
@@ -235,10 +207,10 @@ const Protected = () => {
                     <h2>Unirse a una clase</h2>
                     <input 
                         type="text" 
-                        value={classLink} 
-                        onChange={handleClassLinkChange} 
-                        placeholder="Introduce el enlace de la clase"
-                        style={{ width: '100%', marginBottom: '10px' }} // Establece el ancho del campo de texto al 100%
+                        value={classId}  // Cambiado de classLink a classId
+                        onChange={handleClassIdChange} 
+                        placeholder="Introduce el código de la clase"
+                        style={{ width: '100%', marginBottom: '10px' }}
                     />
                     <div>
                         <Button onClick={handleJoinClass}>Aceptar</Button>

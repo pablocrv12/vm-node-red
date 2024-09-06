@@ -4,8 +4,13 @@ import { useNavigate } from 'react-router-dom';
 import { Button, Modal } from 'react-bootstrap';
 import Navbar from './Navbar';
 import JoinClass from './joinClass';
+import checkAuth from './checkAuth';
 
 const MisClases = () => {
+
+    checkAuth();
+
+    
     const [createdClasses, setCreatedClasses] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -24,7 +29,7 @@ const MisClases = () => {
             const decodedToken = parseJwt(token);
             if (decodedToken && decodedToken.id) {
                 setUserId(decodedToken.id);
-                axios.get(`https://backend-service-3flglcef2q-ew.a.run.app/api/v1/user/rol/${decodedToken.id}`, {
+                axios.get(`https://backend-service-830425129942.europe-west1.run.app/api/v1/user/rol/${decodedToken.id}`, {
                     headers: {
                         Authorization: `${token}`
                     } 
@@ -33,7 +38,7 @@ const MisClases = () => {
                     setRoleUser(res.data.data.role);
                     setLoading(false);
                     if (res.data.data.role === 'student') {
-                        axios.get(`https://backend-service-3flglcef2q-ew.a.run.app/api/v1/user/joinedclasses/${decodedToken.id}`, {
+                        axios.get(`https://backend-service-830425129942.europe-west1.run.app/api/v1/user/joinedclasses/${decodedToken.id}`, {
                             headers: {
                                 Authorization: `${token}`
                             }
@@ -45,7 +50,7 @@ const MisClases = () => {
                             console.error('Error fetching joined classes:', error);
                         });
                     } else {
-                        axios.get(`https://backend-service-3flglcef2q-ew.a.run.app/api/v1/user/createdclasses/${decodedToken.id}`, {
+                        axios.get(`https://backend-service-830425129942.europe-west1.run.app/api/v1/user/createdclasses/${decodedToken.id}`, {
                             headers: {
                                 Authorization: `${token}`
                             }
@@ -99,7 +104,7 @@ const MisClases = () => {
         const token = localStorage.getItem('token');
         console.log(token)
         try {
-            await axios.delete(`https://backend-service-3flglcef2q-ew.a.run.app/api/v1/class/${classId}`, {
+            await axios.delete(`https://backend-service-830425129942.europe-west1.run.app/api/v1/class/${classId}`, {
                 headers: {
                     Authorization: `${token}`
                 }
@@ -119,7 +124,7 @@ const MisClases = () => {
     const confirmLeaveClass = async () => {
         const token = localStorage.getItem('token');
         try {
-            await axios.patch(`https://backend-service-3flglcef2q-ew.a.run.app/api/v1/class/${classIdToLeave}/leave/${userId}`, null, {
+            await axios.patch(`https://backend-service-830425129942.europe-west1.run.app/api/v1/class/${classIdToLeave}/leave/${userId}`, null, {
                 headers: {
                     Authorization: `${token}`
                 }

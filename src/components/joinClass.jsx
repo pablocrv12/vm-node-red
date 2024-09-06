@@ -2,8 +2,12 @@
 import React, { useEffect } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
+import checkAuth from './checkAuth';
 
 const JoinClass = () => {
+
+    checkAuth();
+    
     const { classId } = useParams();
     const navigate = useNavigate();
 
@@ -18,7 +22,7 @@ const JoinClass = () => {
                 }
 
                 const config = { headers: { Authorization: `${token}` } };
-                const response = await axios.post(`https://backend-service-3flglcef2q-ew.a.run.app/api/v1/class/join/${classId}`, {}, config);
+                const response = await axios.post(`https://backend-service-830425129942.europe-west1.run.app/api/v1/class/join/${classId}`, {}, config);
 
                 if (response.status === 200) {
                     alert('Successfully joined the class');

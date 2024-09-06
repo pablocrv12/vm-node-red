@@ -3,8 +3,12 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { Button, Modal } from 'react-bootstrap';
 import Navbar from './Navbar';
+import checkAuth from './checkAuth';
 
 const MisFlows = () => {
+
+    checkAuth();
+    
     const { classId } = useParams();
     const [flows, setFlows] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -15,7 +19,7 @@ const MisFlows = () => {
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token) {
-            axios.get(`https://backend-service-3flglcef2q-ew.a.run.app/api/v1/class/${classId}/flows`, {
+            axios.get(`https://backend-service-830425129942.europe-west1.run.app/api/v1/class/${classId}/flows`, {
                 headers: { Authorization: `${token}` }
             })
             .then(response => {
@@ -40,7 +44,7 @@ const MisFlows = () => {
     const confirmDeleteFlow = () => {
         const token = localStorage.getItem('token');
         if (token) {
-            axios.delete(`https://backend-service-3flglcef2q-ew.a.run.app/api/v1/class/${classId}/deleteFlow/${flowIdToDelete}`, {
+            axios.delete(`https://backend-service-830425129942.europe-west1.run.app/api/v1/class/${classId}/deleteFlow/${flowIdToDelete}`, {
                 headers: { Authorization: `${token}` }
             })
             .then(response => {

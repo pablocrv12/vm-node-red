@@ -10,10 +10,14 @@ import SchoolIcon from '@mui/icons-material/School';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import checkAuth from './checkAuth';
 
 const defaultTheme = createTheme();
 
 const ModificarClase = () => {
+
+    checkAuth();
+    
     const [nombre, setNombre] = useState('');
     const [placeholder, setPlaceholder] = useState('');
     const { classId } = useParams();
@@ -26,7 +30,7 @@ const ModificarClase = () => {
                 const token = localStorage.getItem('token');
 
                 // Realizar una solicitud GET para obtener la información de la clase
-                const response = await axios.get(`https://backend-service-3flglcef2q-ew.a.run.app/api/v1/class/${classId}`,{ 
+                const response = await axios.get(`https://backend-service-830425129942.europe-west1.run.app/api/v1/class/${classId}`,{ 
                     headers: { Authorization: `${token}` 
                 }});
                 
@@ -50,7 +54,7 @@ const ModificarClase = () => {
     
             // Realizar una solicitud PATCH para modificar el nombre de la clase
             await axios.patch(
-                `https://backend-service-3flglcef2q-ew.a.run.app/api/v1/class/${classId}`,
+                `https://backend-service-830425129942.europe-west1.run.app/api/v1/class/${classId}`,
                 { name: nombre }, // Cuerpo de la solicitud
                 { headers: { Authorization: `${token}` }} // Opciones de la solicitud con el token de autorización
             );

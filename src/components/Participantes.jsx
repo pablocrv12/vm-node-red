@@ -4,8 +4,12 @@ import { useParams } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Modal, Container, Row, Col, Button } from 'react-bootstrap';
 import Navbar from './Navbar';
+import checkAuth from './checkAuth';
 
 const Participantes = () => {
+
+    checkAuth();
+
     const { classId } = useParams();
     const [participants, setParticipants] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -16,21 +20,19 @@ const Participantes = () => {
     const openConfirmationModal = (userId) => {
         setUserIdToEject(userId);
         setShowConfirmationModal(true);
-      };
+    };
       
-      const closeConfirmationModal = () => {
+    const closeConfirmationModal = () => {
         setUserIdToEject(null);
         setShowConfirmationModal(false);
-      };
+    };
 
-      const handleEjectConfirmed = () => {
-        // Llamar a la API para expulsar al estudiante
+    const handleEjectConfirmed = () => {
         const token = localStorage.getItem('token');
-        console.log(localStorage.getItem('token'))
         if(token){
             axios.patch(
-                `https://backend-service-3flglcef2q-ew.a.run.app/api/v1/class/${classId}/eject/${userIdToEject}`,
-                {}, // <- No hay datos para enviar, por lo que el cuerpo está vacío
+                `https://backend-service-830425129942.europe-west1.run.app/api/v1/class/${classId}/eject/${userIdToEject}`,
+                {}, 
                 {
                     headers: {
                         Authorization: `${token}`
@@ -39,23 +41,19 @@ const Participantes = () => {
             )
             .then(response => {
                 console.log('Student ejected successfully:', response.data);
-                // Cerrar el modal después de la expulsión
                 closeConfirmationModal();
-
             })
             .catch(error => {
                 console.error('Error ejecting student:', error);
-                // Manejar el error si es necesario
             });
         }
-        console.error('No token found');
         setLoading(false);
     };
 
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token) {
-            axios.get(`https://backend-service-3flglcef2q-ew.a.run.app/api/v1/class/students/${classId}`, {
+            axios.get(`https://backend-service-830425129942.europe-west1.run.app/api/v1/class/students/${classId}`, {
                 headers: {
                     Authorization: `${token}`
                 }
@@ -75,17 +73,12 @@ const Participantes = () => {
         }
     }, [classId]);
 
-    const handleExpulsar = (userId) => {
-        // Aquí puedes agregar la lógica para expulsar al usuario de la clase
-        console.log(`Expulsando usuario con ID: ${userId}`);
-    };
-
     if (loading) return <p>Loading...</p>;
     if (error) return <p>{error}</p>;
     return (
       <div style={{ minHeight: '100vh', backgroundColor: '#f0f0f0', textAlign: 'center' }}>
         <Navbar />
-        <h1 style={{ marginTop: '50px', marginBottom: '50px', fontWeight: 'bold' }}>Participantes</h1>
+        <h1 style={{ marginTop: '60px', marginBottom: '50px', fontWeight: 'bold' }}>Participantes</h1>
         {participants.length === 0 ? (
           <p>Todavía no hay ningún participante.</p>
         ) : (
@@ -99,13 +92,6 @@ const Participantes = () => {
                   <h4>{participant.email}</h4>
                 </div>
                 <div style={{ textAlign: 'right' }}>
-                  <button
-                    onClick={() => openConfirmationModal(participant._id)}
-                    className="btn btn-primary"
-                    style={{ marginRight: '10px' }}
-                  >
-                    Ver flujos
-                  </button>
                   <button
                     onClick={() => openConfirmationModal(participant._id)}
                     className="btn btn-danger"
@@ -134,7 +120,6 @@ const Participantes = () => {
         )}
       </div>
     );
-    
 };
 
 export default Participantes;
