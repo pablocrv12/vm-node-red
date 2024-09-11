@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { BrowserRouter, Route, Routes, useNavigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Login from './components/Login';
@@ -12,21 +12,24 @@ import FlowsClase from './components/FlowsClase';
 import Participantes from './components/Participantes';
 import JoinClass from './components/joinClass';
 import SubirFlujo from './components/subirFlujo';
+import MisFlujos from './components/misFlujos';
 import MisFlows from './components/misflows';
 import ModificarClase from "./components/modificarClase";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Container, Row, Col, Button } from 'react-bootstrap';
+import { Container, Row, Col } from 'react-bootstrap';
 import Perfil from "./components/Perfil";
 import checkAuth from './components/checkAuth';
 import ResetPassword from './components/ResetPassword';
 import ChangePassword from './components/ChangePassword';
+import EditarFlujo from "./components/EditarFlujo";
 
 const Home = () => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(true); // Agregar estado de carga
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    
+
     if (token) {
       const decodedToken = parseJwt(token);
       const isExpired = Date.now() >= decodedToken.exp * 1000;
@@ -35,12 +38,15 @@ const Home = () => {
         console.log('Token has expired');
         localStorage.removeItem('token');
         navigate('/'); // Redirige al usuario a la página de login si el token ha expirado
+        setLoading(false); // Detener el spinner
       } else {
         // El token es válido, opcionalmente puedes hacer alguna acción adicional aquí
         navigate('/protected');
+        setLoading(false); // Detener el spinner
       }
     } else {
       navigate('/'); // Redirige al usuario a la página de login si no existe un token
+      setLoading(false); // Detener el spinner
     }
   }, [navigate]);
 
@@ -56,49 +62,91 @@ const Home = () => {
         console.error('Error parsing JWT:', error);
         return null;
     }
-}
+  }
+
+  // Simula un retraso de 1 segundo
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 1000);
+    return () => clearTimeout(timer); // Limpia el temporizador si el componente se desmonta
+  }, []);
+
+  if (loading) {
+    return (
+      <div style={{
+        textAlign: 'center',
+        fontFamily: 'Arial, sans-serif',
+        fontSize: '16px',
+        color: '#333',
+        position: 'fixed',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        backgroundColor: '#fff',
+        padding: '20px',
+        borderRadius: '10px',
+        boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
+        zIndex: 1000,
+      }}>
+        <div style={{
+          border: '4px solid rgba(0, 0, 0, 0.1)',
+          borderRadius: '50%',
+          borderTop: '4px solid #333',
+          width: '40px',
+          height: '40px',
+          animation: 'spin 1s linear infinite',
+          margin: '0 auto 10px'
+        }}></div>
+        <p>Cargando...</p>
+        <style>
+          {`
+            @keyframes spin {
+              0% { transform: rotate(0deg); }
+              100% { transform: rotate(360deg); }
+            }
+          `}
+        </style>
+      </div>
+    );
+  }
 
   return (
     <div style={{ minHeight: '100vh', backgroundColor: '#f0f0f0' }}>
-        <Navbar />
-
-        <div>
-            <Container style={{ marginTop: '60px' }}>
-                <Row style={{ marginBottom: '60px' }}>
-                    <Col>
-                        <h1>Unete para usar Node-RED como nunca antes</h1>
-                        <p>Multi Node-Red te permite guardar tus flujos de trabajo en la nube para acceder a ellos desde cualquier lugar</p>
-                    </Col>
-                </Row>
-            </Container>
-        </div>
-
-        <Container style={{ marginTop: '80px' }}>
-            <Row style={{ marginBottom: '40px' }}>
-                <Col md={6} style={{ textAlign: 'center' }}>
-                    <h1 style={{ textAlign: 'center', fontWeight: 'bold' }}>Clases</h1>
-                    <Row>
-                        <Col md={6}>
-                        <h3 style={{ textAlign: 'center' }}>Interactua con tus profesores gracias al sistema de clases</h3>
-                        </Col>
-                        <Col md={6}>
-                            <h3 style={{ textAlign: 'center' }}>Accede a tus clases</h3>
-                            
-                        </Col>
-                    </Row>
-                </Col>
-                <Col md={6} style={{ textAlign: 'center' }}>
-                    <h1 style={{ textAlign: 'center', fontWeight: 'bold' }}>Node-RED</h1>
-                    <h2 style={{ textAlign: 'center' }}>Regístrate y empieza ya a trabajar con Node-RED</h2>
-                    
-                    <div style={{ display: 'flex', justifyContent: 'center' }}>
-                    <img src="/node-red.png" style={{ width: '80%', marginTop: '20px' }} />
-                    </div>
-                </Col>
-            </Row>
+      <Navbar />
+      <div style={{ marginTop: '65px' }}>
+        <Container>
+          <Row style={{ marginBottom: '60px' }}>
+            <Col>
+              <h1>Únete para usar Node-RED como nunca antes</h1>
+              <p>Multi Node-Red te permite guardar tus flujos de trabajo en la nube para acceder a ellos desde cualquier lugar</p>
+            </Col>
+          </Row>
         </Container>
+      </div>
+
+      <Container style={{ marginTop: '80px' }}>
+        <Row style={{ marginBottom: '40px' }}>
+          <Col md={6} style={{ textAlign: 'center' }}>
+            <h1 style={{ textAlign: 'center', fontWeight: 'bold' }}>Clases</h1>
+            <Row>
+              <Col md={6}>
+                <h3 style={{ textAlign: 'center' }}>Interactua con tus profesores gracias al sistema de clases</h3>
+              </Col>
+              <Col md={6}>
+                <h3 style={{ textAlign: 'center' }}>Accede a tus clases</h3>
+              </Col>
+            </Row>
+          </Col>
+          <Col md={6} style={{ textAlign: 'center' }}>
+            <h1 style={{ textAlign: 'center', fontWeight: 'bold' }}>Node-RED</h1>
+            <h2 style={{ textAlign: 'center' }}>Regístrate y empieza ya a trabajar con Node-RED</h2>
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+              <img src="/node-red.png" style={{ width: '80%', marginTop: '20px' }} />
+            </div>
+          </Col>
+        </Row>
+      </Container>
     </div>
-);
+  );
 }
 
 const App = () => {
@@ -121,9 +169,10 @@ const App = () => {
           <Route path="/clase/:classId/flowsClase" element={<FlowsClase />} />
           <Route path="/clase/:classId/subirFlujo" element={<SubirFlujo />} />
           <Route path="/clase/:classId/MisFlowsClase" element={<MisFlows />} />
+          <Route path="/misFlujos/:userId" element={<MisFlujos />} />
+          <Route path="/editarFlujo/:flowId" element={<EditarFlujo />} />
           <Route path="/clase/:classId/participantes" element={<Participantes />} />
           <Route path="/join/:classId" element={<JoinClass />} />
-
         </Routes>
       </BrowserRouter>
     </div>

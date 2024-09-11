@@ -19,14 +19,13 @@ import { useNavigate } from "react-router-dom";
 const defaultTheme = createTheme();
 
 export default function Register() {
-
-  
   const [email, setEmail] = useState('');
   const [pass, setPass] = useState('');
   const [nombre, setNombre] = useState('');
   const [apellidos, setApellidos] = useState('');
   const [role, setRole] = useState('');
   const [isFormValid, setIsFormValid] = useState(false);
+  const [loading, setLoading] = useState(false);  // Estado para el spinner
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -39,26 +38,34 @@ export default function Register() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setLoading(true);  // Mostrar el spinner
 
-    const response = await fetch('https://backend-service-830425129942.europe-west1.run.app/register', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        email: email,
-        password: pass,
-        role: role,
-        name: `${nombre} ${apellidos}`
-      })
-    });
+    try {
+      const response = await fetch('https://backend-service-830425129942.europe-west1.run.app/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          email: email,
+          password: pass,
+          role: role,
+          name: `${nombre} ${apellidos}`
+        })
+      });
 
-    const result = await response.json();
-    if (result.success) {
-      alert('User registered successfully');
-      navigate('/login');
-    } else {
-      alert('Error: ' + result.message);
+      const result = await response.json();
+      if (result.success) {
+        alert('Te has registrado correctamente');
+        navigate('/login');
+      } else {
+        alert('Error: ' + result.message);
+      }
+    } catch (error) {
+      console.error('El correo electrónico ya está en uso, por favor, inténtalo con otro:', error);
+      alert('Registration failed');
+    } finally {
+      setLoading(false); 
     }
   };
 
@@ -169,7 +176,7 @@ export default function Register() {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
-              disabled={!isFormValid}
+              disabled={!isFormValid || loading}  // Deshabilitar el botón mientras está cargando
             >
               Unirse
             </Button>
@@ -182,6 +189,43 @@ export default function Register() {
             </Grid>
           </Box>
         </Box>
+        
+        {loading && (
+          <div style={{
+            textAlign: 'center',
+            fontFamily: 'Arial, sans-serif',
+            fontSize: '16px',
+            color: '#333',
+            position: 'fixed',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            backgroundColor: '#fff',
+            padding: '20px',
+            borderRadius: '10px',
+            boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
+            zIndex: 1000,
+          }}>
+            <div style={{
+              border: '4px solid rgba(0, 0, 0, 0.1)',
+              borderRadius: '50%',
+              borderTop: '4px solid #333',
+              width: '40px',
+              height: '40px',
+              animation: 'spin 1s linear infinite',
+              margin: '0 auto 10px'
+            }}></div>
+          </div>
+        )}
+
+        <style>
+          {`
+          @keyframes spin {
+              0% { transform: rotate(0deg); }
+              100% { transform: rotate(360deg); }
+          }
+          `}
+        </style>
       </Container>
     </ThemeProvider>
   );

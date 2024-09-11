@@ -10,14 +10,15 @@ import { handleAccessNodeRed } from '../utils/nodeRedUtils';
 
 const Protected = () => {
     checkAuth();
-    
+
     const navigate = useNavigate();
     const [roleUser, setRoleUser] = useState('');
     const [userId, setUserId] = useState('');
     const [userName, setUserName] = useState('');
     const [modalIsOpen, setModalIsOpen] = useState(false);
-    const [classId, setClassId] = useState('');  // Cambiado de classLink a classId
-    const [loading, setLoading] = useState(false);
+    const [classId, setClassId] = useState('');
+    const [loadingPage, setLoadingPage] = useState(true); // Estado de carga de la página
+    const [loadingNodeRed, setLoadingNodeRed] = useState(false); // Estado de carga de Node-RED
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -34,6 +35,7 @@ const Protected = () => {
                 .then(res => {
                     setRoleUser(res.data.data.role);
                     setUserName(res.data.data.name.split(' ')[0]);   
+                    setLoadingPage(false); // Datos cargados, ocultar spinner de carga inicial
                 })
                 .catch(err => {
                     console.log(err);
@@ -68,17 +70,17 @@ const Protected = () => {
 
     const closeModal = () => {
         setModalIsOpen(false);
-        setClassId('');  // Cambiado de classLink a classId
+        setClassId('');
     };
 
     const handleClassIdChange = (event) => {
-        setClassId(event.target.value);  // Cambiado de classLink a classId
+        setClassId(event.target.value);
     };
 
     const handleJoinClass = async () => {
         const token = localStorage.getItem('token');
 
-        if (!classId) {  // Cambiado de classLink a classId
+        if (!classId) {
             alert('Por favor, introduce el código de la clase');
             return;
         }
@@ -103,11 +105,50 @@ const Protected = () => {
         }
     };
 
+    if (loadingPage) {
+        return (
+            <div style={{
+                textAlign: 'center',
+                fontFamily: 'Arial, sans-serif',
+                fontSize: '16px',
+                color: '#333',
+                position: 'fixed',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                backgroundColor: '#fff',
+                padding: '20px',
+                borderRadius: '10px',
+                boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
+                zIndex: 1000,
+            }}>
+                <div style={{
+                    border: '4px solid rgba(0, 0, 0, 0.1)',
+                    borderRadius: '50%',
+                    borderTop: '4px solid #333',
+                    width: '40px',
+                    height: '40px',
+                    animation: 'spin 1s linear infinite',
+                    margin: '0 auto 10px'
+                }}></div>
+                <p>Cargando...</p>
+                <style>
+                    {`
+                        @keyframes spin {
+                            0% { transform: rotate(0deg); }
+                            100% { transform: rotate(360deg); }
+                        }
+                    `}
+                </style>
+            </div>
+        );
+    }
+
     return (
         <div style={{ minHeight: '100vh', backgroundColor: '#f0f0f0' }}>
             <Navbar />
-            
-            {loading && (
+
+            {loadingNodeRed && (
                 <div style={{
                     textAlign: 'center',
                     fontFamily: 'Arial, sans-serif',
@@ -174,7 +215,14 @@ const Protected = () => {
                     <Col md={6} style={{ textAlign: 'center' }}>
                         <h1 style={{ textAlign: 'center', fontWeight: 'bold' }}>Node-RED</h1>
                         <h2 style={{ textAlign: 'center' }}>Accede ya a Node-RED para empezar a crear y gestionar tus flujos de trabajo</h2>
-                        <Button onClick={() => handleAccessNodeRed(setLoading)}>Node-RED</Button>
+                        <Button onClick={() => handleAccessNodeRed(setLoadingNodeRed)}>Node-RED</Button>
+                        {/* Botón Editar Flujos */}
+                        <Button
+                            onClick={() => navigate(`/MisFlujos/${userId}`)}
+                            style={{ marginLeft: '10px' }}
+                        >
+                            Editar Flujos
+                        </Button>
                         <div style={{ display: 'flex', justifyContent: 'center' }}>
                             <img src="/node-red.png" style={{ width: '80%', marginTop: '20px' }} />
                         </div>
@@ -207,7 +255,7 @@ const Protected = () => {
                     <h2>Unirse a una clase</h2>
                     <input 
                         type="text" 
-                        value={classId}  // Cambiado de classLink a classId
+                        value={classId}
                         onChange={handleClassIdChange} 
                         placeholder="Introduce el código de la clase"
                         style={{ width: '100%', marginBottom: '10px' }}
@@ -221,10 +269,10 @@ const Protected = () => {
 
             <style>
                 {`
-                @keyframes spin {
-                    0% { transform: rotate(0deg); }
-                    100% { transform: rotate(360deg); }
-                }
+                    @keyframes spin {
+                        0% { transform: rotate(0deg); }
+                        100% { transform: rotate(360deg); }
+                    }
                 `}
             </style>
         </div>

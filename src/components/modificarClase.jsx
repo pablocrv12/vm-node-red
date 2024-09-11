@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom'; // Importa useNavigate
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -15,26 +15,21 @@ import checkAuth from './checkAuth';
 const defaultTheme = createTheme();
 
 const ModificarClase = () => {
-
     checkAuth();
-    
+
     const [nombre, setNombre] = useState('');
     const [placeholder, setPlaceholder] = useState('');
     const { classId } = useParams();
+    const navigate = useNavigate(); // Inicializa useNavigate
 
     useEffect(() => {
-        // Función asincrónica para obtener la información de la clase
         const fetchClass = async () => {
             try {
-                // Obtener el token de autorización de tu fuente de datos (por ejemplo, localStorage)
                 const token = localStorage.getItem('token');
-
-                // Realizar una solicitud GET para obtener la información de la clase
-                const response = await axios.get(`https://backend-service-830425129942.europe-west1.run.app/api/v1/class/${classId}`,{ 
-                    headers: { Authorization: `${token}` 
-                }});
+                const response = await axios.get(`https://backend-service-830425129942.europe-west1.run.app/api/v1/class/${classId}`, { 
+                    headers: { Authorization: `${token}` } 
+                });
                 
-                // Establecer el nombre de la clase en el estado nombre
                 setNombre(response.data.data.name);
                 setPlaceholder(nombre);
             } catch (error) {
@@ -42,24 +37,22 @@ const ModificarClase = () => {
             }
         };
 
-        // Llamar a la función para obtener la información de la clase cuando el componente se monte
         fetchClass();
     }, [classId]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            // Obtener el token de autorización de tu fuente de datos (por ejemplo, localStorage)
             const token = localStorage.getItem('token');
     
-            // Realizar una solicitud PATCH para modificar el nombre de la clase
             await axios.patch(
                 `https://backend-service-830425129942.europe-west1.run.app/api/v1/class/${classId}`,
-                { name: nombre }, // Cuerpo de la solicitud
-                { headers: { Authorization: `${token}` }} // Opciones de la solicitud con el token de autorización
+                { name: nombre },
+                { headers: { Authorization: `${token}` } }
             );
     
             alert('Nombre de la clase modificado correctamente');
+            navigate(-1); // Redirige a la página anterior
         } catch (error) {
             console.error('Error al modificar el nombre de la clase:', error);
         }
@@ -84,18 +77,18 @@ const ModificarClase = () => {
                         Modificar nombre de la clase
                     </Typography>
                     <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-                    <TextField
-                    margin="normal"
-                    required
-                    fullWidth
-                    id="nombre"
-                    label="Nuevo nombre"
-                    name="nombre"
-                    autoFocus
-                    value={nombre || ''} // Proporciona un valor por defecto en caso de que nombre sea indefinido
-                    onChange={(e) => setNombre(e.target.value)}
-                    placeholder={nombre || ''} // Establece el mismo valor por defecto para el placeholder
-                    />
+                        <TextField
+                            margin="normal"
+                            required
+                            fullWidth
+                            id="nombre"
+                            label="Nuevo nombre"
+                            name="nombre"
+                            autoFocus
+                            value={nombre || ''} 
+                            onChange={(e) => setNombre(e.target.value)}
+                            placeholder={nombre || ''}
+                        />
                         <Button
                             type="submit"
                             fullWidth
@@ -104,7 +97,7 @@ const ModificarClase = () => {
                         >
                             Guardar cambios
                         </Button>
-                    </Box>
+                    </Box>  
                 </Box>
             </Container>
         </ThemeProvider>

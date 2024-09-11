@@ -56,6 +56,7 @@ const InvitacionClase = () => {
         const recipientEmails = emails.split(',').map(email => email.trim());
         const token = localStorage.getItem('token');
         if (token) {
+            setLoading(true); // Start loading spinner
             try {
                 await axios.post('https://backend-service-830425129942.europe-west1.run.app/api/v1/class/send-invite', { recipientEmails, className, classId }, {
                     headers: {
@@ -67,12 +68,52 @@ const InvitacionClase = () => {
             } catch (error) {
                 console.error('Error enviando las invitaciones:', error);
             }
+            setLoading(false); // Stop loading spinner
         } else {
             console.error('No token found');
+            setLoading(false); // Stop loading spinner
         }
     };
 
-    if (loading) return <p>Loading...</p>;
+    if (loading) {
+        return (
+            <div style={{
+                textAlign: 'center',
+                fontFamily: 'Arial, sans-serif',
+                fontSize: '16px',
+                color: '#333',
+                position: 'fixed',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                backgroundColor: '#fff',
+                padding: '20px',
+                borderRadius: '10px',
+                boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
+                zIndex: 1000,
+            }}>
+                <div style={{
+                    border: '4px solid rgba(0, 0, 0, 0.1)',
+                    borderRadius: '50%',
+                    borderTop: '4px solid #333',
+                    width: '40px',
+                    height: '40px',
+                    animation: 'spin 1s linear infinite',
+                    margin: '0 auto 10px'
+                }}></div>
+                <p>Cargando...</p>
+                <style>
+                    {`
+                        @keyframes spin {
+                            0% { transform: rotate(0deg); }
+                            100% { transform: rotate(360deg); }
+                        }
+                    `}
+                </style>
+            </div>
+        );
+    }
+
     if (error) return <p>{error}</p>;
 
     return (

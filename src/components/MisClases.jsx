@@ -1,16 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { Button, Modal } from 'react-bootstrap';
+import { Button, Modal, Alert } from 'react-bootstrap';
 import Navbar from './Navbar';
-import JoinClass from './joinClass';
 import checkAuth from './checkAuth';
+import '../../css/Spinner.css';
 
 const MisClases = () => {
-
     checkAuth();
 
-    
     const [createdClasses, setCreatedClasses] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -20,8 +18,8 @@ const MisClases = () => {
     const [classIdToDelete, setClassIdToDelete] = useState(null);
     const [classIdToLeave, setClassIdToLeave] = useState('');
     const [userId, setUserId] = useState('');
+    const [successMessage, setSuccessMessage] = useState(''); // Estado para el mensaje de éxito
     const navigate = useNavigate();
-    
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -32,11 +30,10 @@ const MisClases = () => {
                 axios.get(`https://backend-service-830425129942.europe-west1.run.app/api/v1/user/rol/${decodedToken.id}`, {
                     headers: {
                         Authorization: `${token}`
-                    } 
+                    }
                 })
                 .then(res => {
                     setRoleUser(res.data.data.role);
-                    setLoading(false);
                     if (res.data.data.role === 'student') {
                         axios.get(`https://backend-service-830425129942.europe-west1.run.app/api/v1/user/joinedclasses/${decodedToken.id}`, {
                             headers: {
@@ -45,9 +42,12 @@ const MisClases = () => {
                         })
                         .then(response => {
                             setJoinedClasses(response.data.data);
+                            setLoading(false);
                         })
                         .catch(error => {
                             console.error('Error fetching joined classes:', error);
+                            setLoading(false);
+                            setError('Failed to load joined classes');
                         });
                     } else {
                         axios.get(`https://backend-service-830425129942.europe-west1.run.app/api/v1/user/createdclasses/${decodedToken.id}`, {
@@ -57,9 +57,11 @@ const MisClases = () => {
                         })
                         .then(response => {
                             setCreatedClasses(response.data.data);
+                            setLoading(false);
                         })
                         .catch(err => {
                             console.error('Error fetching created classes:', err);
+                            setLoading(false);
                             setError('Failed to load created classes');
                         });
                     }
@@ -96,24 +98,25 @@ const MisClases = () => {
     };
 
     const handleDeleteClass = async (classId) => {
-        setClassIdToDelete(classId); // Guarda el ID de la clase a eliminar
-        setShowConfirmationModal(true); // Muestra el modal de confirmación
+        setClassIdToDelete(classId);
+        setShowConfirmationModal(true);
     };
 
-    const confirmDeleteClass = async (classId) => {
+    const confirmDeleteClass = async () => {
         const token = localStorage.getItem('token');
-        console.log(token)
         try {
-            await axios.delete(`https://backend-service-830425129942.europe-west1.run.app/api/v1/class/${classId}`, {
+            await axios.delete(`http://localhost:3000/api/v1/class/${classIdToDelete}`, {
                 headers: {
                     Authorization: `${token}`
                 }
             });
-            setCreatedClasses(createdClasses.filter(clase => clase._id !== classId));
+            setCreatedClasses(createdClasses.filter(clase => clase._id !== classIdToDelete));
+            setSuccessMessage('Clase eliminada correctamente'); // Mensaje de éxito para eliminación
+            setTimeout(() => setSuccessMessage(''), 3000); // Limpia el mensaje después de 3 segundos
         } catch (error) {
             console.error('Error deleting class:', error);
         }
-    setShowConfirmationModal(false);
+        setShowConfirmationModal(false);
     };
 
     const handleLeaveClass = (classId) => {
@@ -130,13 +133,23 @@ const MisClases = () => {
                 }
             });
             setJoinedClasses(joinedClasses.filter(clase => clase._id !== classIdToLeave));
+            setSuccessMessage('Has abandonado la clase correctamente'); // Mensaje de éxito para abandono
+            setTimeout(() => setSuccessMessage(''), 3000); // Limpia el mensaje después de 3 segundos
         } catch (error) {
             console.error('Error leaving class:', error);
         }
         setShowConfirmationModal(false);
     };
 
-    if (loading) return <p>Loading...</p>;
+    if (loading) {
+        return (
+            <div className="spinner-container">
+                <div className="spinner"></div>
+                <p>Cargando tus clases...</p>
+            </div>
+        );
+    }
+
     if (error) return <p>{error}</p>;
 
     return (
@@ -144,6 +157,7 @@ const MisClases = () => {
             <Navbar />
             <div style={{ marginTop: '70px', textAlign: 'center' }}>
                 <h1>Tus clases</h1>
+                {successMessage && <Alert variant="success">{successMessage}</Alert>} {/* Mostrar mensaje de éxito */}
                 {roleUser === 'professor' && (
                     <ul className="list-group">
                         {createdClasses.length > 0 ? (
@@ -184,7 +198,6 @@ const MisClases = () => {
                         ) : (
                             <div>
                                 <p>Todavía no te has unido a ninguna clase</p>
-                                
                             </div>
                         )}
                     </ul>
@@ -212,8 +225,6 @@ const MisClases = () => {
             </Modal>
         </div>
     );
-    
-    
 };
 
 export default MisClases;

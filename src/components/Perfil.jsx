@@ -22,9 +22,8 @@ import checkAuth from './checkAuth';
 const defaultTheme = createTheme();
 
 const Perfil = () => {
-
   checkAuth();
-  
+
   const navigate = useNavigate();
   const [currentName, setCurrentName] = useState('');
   const [currentEmail, setCurrentEmail] = useState('');
@@ -33,6 +32,8 @@ const Perfil = () => {
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
   const [currentPasswordInput, setCurrentPasswordInput] = useState('');
   const [newPasswordInput, setNewPasswordInput] = useState('');
+  const [loading, setLoading] = useState(true); // State for loading
+  const [error, setError] = useState(null); // State for error
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -48,9 +49,12 @@ const Perfil = () => {
         .then(res => {
           setCurrentName(res.data.data.name);
           setCurrentEmail(res.data.data.email);
+          setLoading(false); // Set loading to false after fetching data
         })
         .catch(error => {
           console.error('Error al obtener los datos del usuario:', error);
+          setError('Error al obtener los datos del usuario');
+          setLoading(false); // Set loading to false in case of error
         });
       }
     }
@@ -144,6 +148,51 @@ const Perfil = () => {
       console.error('Error al eliminar la cuenta:', error);
     }
   };
+
+  if (loading) {
+    return (
+      <div className="spinner-container">
+        <div className="spinner"></div>
+        <p>Cargando...</p>
+        <style>
+          {`
+            .spinner-container {
+              text-align: center;
+              font-family: Arial, sans-serif;
+              font-size: 16px;
+              color: #333;
+              position: fixed;
+              top: 50%;
+              left: 50%;
+              transform: translate(-50%, -50%);
+              background-color: #fff;
+              padding: 20px;
+              border-radius: 10px;
+              box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+              z-index: 1000;
+            }
+
+            .spinner {
+              border: 4px solid rgba(0, 0, 0, 0.1);
+              border-radius: 50%;
+              border-top: 4px solid #333;
+              width: 40px;
+              height: 40px;
+              animation: spin 1s linear infinite;
+              margin: 0 auto 10px;
+            }
+
+            @keyframes spin {
+              0% { transform: rotate(0deg); }
+              100% { transform: rotate(360deg); }
+            }
+          `}
+        </style>
+      </div>
+    );
+  }
+
+  if (error) return <p>{error}</p>;
 
   return (
     <ThemeProvider theme={defaultTheme}>

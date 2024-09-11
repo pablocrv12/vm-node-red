@@ -20,10 +20,12 @@ export default function SignIn() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(''); // Estado para manejar el mensaje de error
+  const [loading, setLoading] = useState(false); // Estado para manejar el spinner de carga
   const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setLoading(true); // Mostrar el spinner al iniciar sesión
 
     try {
       const response = await axios.post("https://backend-service-830425129942.europe-west1.run.app/login", { email, password });
@@ -33,6 +35,8 @@ export default function SignIn() {
     } catch (error) {
       console.error('Error al iniciar sesión:', error);
       setError('Usuario o contraseña incorrectos'); // Establecer el mensaje de error
+    } finally {
+      setLoading(false); // Ocultar el spinner después de la respuesta
     }
   };
 
@@ -89,12 +93,13 @@ export default function SignIn() {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
+              disabled={loading} // Deshabilitar el botón mientras carga
             >
               Iniciar sesión
             </Button>
             <Grid container>
               <Grid item xs>
-              <Link href="#" variant="body2" onClick={() => navigate('/resetPassword')}>
+                <Link href="#" variant="body2" onClick={() => navigate('/resetPassword')}>
                   ¿Has olvidado tu contraseña?
                 </Link>
               </Grid>
@@ -106,6 +111,42 @@ export default function SignIn() {
             </Grid>
           </Box>
         </Box>
+
+        {loading && ( // Spinner que se muestra mientras está cargando
+          <div style={{
+            textAlign: 'center',
+            fontFamily: 'Arial, sans-serif',
+            fontSize: '16px',
+            color: '#333',
+            position: 'fixed',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            backgroundColor: '#fff',
+            padding: '20px',
+            borderRadius: '10px',
+            boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
+            zIndex: 1000,
+          }}>
+            <div style={{
+              border: '4px solid rgba(0, 0, 0, 0.1)',
+              borderRadius: '50%',
+              borderTop: '4px solid #333',
+              width: '40px',
+              height: '40px',
+              animation: 'spin 1s linear infinite',
+              margin: '0 auto 10px'
+            }}></div>
+          </div>
+        )}
+        <style>
+          {`
+          @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+          }
+          `}
+        </style>
       </Container>
     </ThemeProvider>
   );

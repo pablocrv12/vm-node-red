@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Modal, Container, Row, Col, Button } from 'react-bootstrap';
+import { Modal, Container, Row, Col, Button, Alert } from 'react-bootstrap';
 import Navbar from './Navbar';
 import checkAuth from './checkAuth';
 
@@ -16,6 +16,7 @@ const Participantes = () => {
     const [error, setError] = useState(null);
     const [showConfirmationModal, setShowConfirmationModal] = useState(false);
     const [userIdToEject, setUserIdToEject] = useState(null);
+    const [successMessage, setSuccessMessage] = useState(''); // State for success message
 
     const openConfirmationModal = (userId) => {
         setUserIdToEject(userId);
@@ -42,6 +43,10 @@ const Participantes = () => {
             .then(response => {
                 console.log('Student ejected successfully:', response.data);
                 closeConfirmationModal();
+                // Refresh participants list after successful eject
+                setParticipants(participants.filter(participant => participant._id !== userIdToEject));
+                setSuccessMessage('Participante expulsado con éxito'); // Set success message
+                setTimeout(() => setSuccessMessage(''), 3000); // Clear success message after 3 seconds
             })
             .catch(error => {
                 console.error('Error ejecting student:', error);
@@ -53,32 +58,77 @@ const Participantes = () => {
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token) {
-            axios.get(`https://backend-service-830425129942.europe-west1.run.app/api/v1/class/students/${classId}`, {
-                headers: {
-                    Authorization: `${token}`
-                }
-            })
-            .then(response => {
-                setParticipants(response.data.data);
-                setLoading(false);
-            })
-            .catch(error => {
-                console.error('Error fetching participants:', error);
-                setError('Failed to load participants');
-                setLoading(false);
-            });
+            // Simulate loading time
+            const loadTimer = setTimeout(() => {
+                axios.get(`https://backend-service-830425129942.europe-west1.run.app/api/v1/class/students/${classId}`, {
+                    headers: {
+                        Authorization: `${token}`
+                    }
+                })
+                .then(response => {
+                    setParticipants(response.data.data);
+                    setLoading(false);
+                })
+                .catch(error => {
+                    console.error('Error fetching participants:', error);
+                    setError('Failed to load participants');
+                    setLoading(false);
+                });
+            }, 1000); // 1 second delay
+
+            return () => clearTimeout(loadTimer); // Cleanup timer on unmount
         } else {
             console.error('No token found');
             setLoading(false);
         }
     }, [classId]);
 
-    if (loading) return <p>Loading...</p>;
+    if (loading) {
+        return (
+            <div style={{
+                textAlign: 'center',
+                fontFamily: 'Arial, sans-serif',
+                fontSize: '16px',
+                color: '#333',
+                position: 'fixed',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                backgroundColor: '#fff',
+                padding: '20px',
+                borderRadius: '10px',
+                boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
+                zIndex: 1000,
+            }}>
+                <div style={{
+                    border: '4px solid rgba(0, 0, 0, 0.1)',
+                    borderRadius: '50%',
+                    borderTop: '4px solid #333',
+                    width: '40px',
+                    height: '40px',
+                    animation: 'spin 1s linear infinite',
+                    margin: '0 auto 10px'
+                }}></div>
+                <p>Cargando...</p>
+                <style>
+                    {`
+                        @keyframes spin {
+                            0% { transform: rotate(0deg); }
+                            100% { transform: rotate(360deg); }
+                        }
+                    `}
+                </style>
+            </div>
+        );
+    }
+
     if (error) return <p>{error}</p>;
+
     return (
       <div style={{ minHeight: '100vh', backgroundColor: '#f0f0f0', textAlign: 'center' }}>
         <Navbar />
         <h1 style={{ marginTop: '60px', marginBottom: '50px', fontWeight: 'bold' }}>Participantes</h1>
+        {successMessage && <Alert variant="success">{successMessage}</Alert>} {/* Display success message */}
         {participants.length === 0 ? (
           <p>Todavía no hay ningún participante.</p>
         ) : (

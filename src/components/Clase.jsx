@@ -25,46 +25,51 @@ const Clase = () => {
         if (token) {
             const decodedToken = parseJwt(token);
             if (decodedToken) {
-                axios.get(`https://backend-service-830425129942.europe-west1.run.app/api/v1/class/${classId}`, {
-                    headers: {
-                        Authorization: `${token}`
-                    }
-                })
-                .then(response => {
-                    setClassDetail(response.data.data);
-                    setLoading(false);
-                })
-                .catch(err => {
-                    console.error('Error fetching class detail:', err);
-                    setError('Failed to load class details');
-                    setLoading(false);
-                });
+                // Simulate loading time
+                const loadTimer = setTimeout(() => {
+                    axios.get(`https://backend-service-830425129942.europe-west1.run.app/api/v1/class/${classId}`, {
+                        headers: {
+                            Authorization: `${token}`
+                        }
+                    })
+                    .then(response => {
+                        setClassDetail(response.data.data);
+                        setLoading(false);
+                    })
+                    .catch(err => {
+                        console.error('Error fetching class detail:', err);
+                        setError('Failed to load class details');
+                        setLoading(false);
+                    });
 
-                axios.get(`https://backend-service-830425129942.europe-west1.run.app/api/v1/user/rol/${decodedToken.id}`, {
-                    headers: {
-                        Authorization: `${token}`
-                    } 
-                })
-                .then(res => {
-                    setUserRole(res.data.data.role);
-                })
-                .catch(err => {
-                    console.log(err);
-                    setError('Failed to load user role');
-                    setLoading(false);
-                });
+                    axios.get(`https://backend-service-830425129942.europe-west1.run.app/api/v1/user/rol/${decodedToken.id}`, {
+                        headers: {
+                            Authorization: `${token}`
+                        } 
+                    })
+                    .then(res => {
+                        setUserRole(res.data.data.role);
+                    })
+                    .catch(err => {
+                        console.log(err);
+                        setError('Failed to load user role');
+                        setLoading(false);
+                    });
 
-                axios.get(`https://backend-service-830425129942.europe-west1.run.app/api/v1/class/${classId}/flows`, {
-                    headers: {
-                        Authorization: `${token}`
-                    }
-                })
-                .then(response => {
-                    setFlows(response.data.data);
-                })
-                .catch(error => {
-                    console.error('Error fetching flows:', error);
-                });
+                    axios.get(`https://backend-service-830425129942.europe-west1.run.app/api/v1/class/${classId}/flows`, {
+                        headers: {
+                            Authorization: `${token}`
+                        }
+                    })
+                    .then(response => {
+                        setFlows(response.data.data);
+                    })
+                    .catch(error => {
+                        console.error('Error fetching flows:', error);
+                    });
+                }, 500);
+
+                return () => clearTimeout(loadTimer); 
             } else {
                 setError('Failed to decode token');
                 setLoading(false);
@@ -159,7 +164,45 @@ const Clase = () => {
         }
     };
 
-    if (loading) return <p>Loading...</p>;
+    if (loading) {
+        return (
+            <div style={{
+                textAlign: 'center',
+                fontFamily: 'Arial, sans-serif',
+                fontSize: '16px',
+                color: '#333',
+                position: 'fixed',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                backgroundColor: '#fff',
+                padding: '20px',
+                borderRadius: '10px',
+                boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
+                zIndex: 1000,
+            }}>
+                <div style={{
+                    border: '4px solid rgba(0, 0, 0, 0.1)',
+                    borderRadius: '50%',
+                    borderTop: '4px solid #333',
+                    width: '40px',
+                    height: '40px',
+                    animation: 'spin 1s linear infinite',
+                    margin: '0 auto 10px'
+                }}></div>
+                <p>Cargando...</p>
+                <style>
+                    {`
+                        @keyframes spin {
+                            0% { transform: rotate(0deg); }
+                            100% { transform: rotate(360deg); }
+                        }
+                    `}
+                </style>
+            </div>
+        );
+    }
+
     if (error) return <p>{error}</p>;
 
     return (
@@ -169,7 +212,9 @@ const Clase = () => {
             <Container style={{ marginTop: '60px' }}>
                 <Row style={{ marginBottom: '60px' }}>
                     <Col>
-                        <h1 style={{ fontWeight: 'bold' }}>{classDetail.name}</h1>
+                        {classDetail && (
+                            <h1 style={{ fontWeight: 'bold' }}>{classDetail.name}</h1>
+                        )}
                     </Col>
                 </Row>
             </Container>
@@ -184,20 +229,16 @@ const Clase = () => {
                                     <div>
                                         <h3>Entrega tus flujos de trabajo</h3>
                                         <Button onClick={handleSubirFlows}>Subir Flujo</Button>
-                                        
                                     </div>
                                 )}
                                 {userRole === 'professor' && (
                                   <div>
-
-                                
                                 <h1 style={{ textAlign: 'center', fontWeight: 'bold' }}>Gestiona a tus Alumnos</h1>
                                   <div style={{ marginBottom: '50px' }}>
                                       <Button onClick={handleVerParticipantes} style={{ marginRight: '50px' }}>Ver Participantes</Button>
                                       <Button onClick={handleNavigateToInvitation}>Invitar</Button>
                                   </div>
                                   <div>
-                                      
                                   </div>
                               </div>
                                 )}
@@ -209,21 +250,18 @@ const Clase = () => {
                                     <div>
                                         <h3>Aquí podrás ver los flujos de trabajo compartidos por el profesor de la clase:</h3>
                                         <Button onClick={handleViewFlows}>Flujos</Button>
-                                        
                                     </div>
                                 )}
                                 {userRole === 'professor' && (
                                     <div>
                             <h1 style={{ textAlign: 'center', fontWeight: 'bold' }}>Edita tu clase</h1>
-                            <Button onClick={handleModificar}>Guardar cambios</Button>
+                            <Button onClick={handleModificar}>Editar clase</Button>
                             <h1 style={{ textAlign: 'center', fontWeight: 'bold', marginTop : '80px' }}>Flujos de trabajo</h1>
                             <h2 style={{ textAlign: 'center' }}>Aquí puedes publicar flujos en tus clases o ver los flujos de los alumnos</h2>
                                         <Button onClick={handleViewFlows} style={{ marginRight: '50px' }}>Ver Flujos</Button>
                                         <Button onClick={handleSubirFlows}>Publicar Flujo</Button>
                                     </div>
                                 )}
-                    
-                    
                     </Col>
                 </Row>
             </Container>
