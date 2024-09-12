@@ -29,7 +29,7 @@ const InvitacionClase = () => {
             const token = localStorage.getItem('token');
             if (token) {
                 try {
-                    const response = await axios.get(`https://backend-service-830425129942.europe-west1.run.app/api/v1/class/${classId}`, {
+                    const response = await axios.get(`http://localhost:3000/api/v1/class/${classId}`, {
                         headers: {
                             Authorization: `${token}`
                         }
@@ -58,7 +58,7 @@ const InvitacionClase = () => {
         if (token) {
             setLoading(true);
             try {
-                await axios.post('https://backend-service-830425129942.europe-west1.run.app/api/v1/email/send-invite', { recipientEmails, className, classId }, {
+                await axios.post('http://localhost:3000/api/v1/email/send-invite', { recipientEmails, className, classId }, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }

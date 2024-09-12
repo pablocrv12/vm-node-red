@@ -21,7 +21,7 @@ const Navbar = () => {
 
             const decodedToken = parseJwt(token);
             if (decodedToken) {
-                axios.get(`https://backend-service-830425129942.europe-west1.run.app/api/v1/user/rol/${decodedToken.id}`, {
+                axios.get(`http://localhost:3000/api/v1/user/rol/${decodedToken.id}`, {
                     headers: {
                         Authorization: `${token}`
                     }

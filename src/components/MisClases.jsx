@@ -27,7 +27,7 @@ const MisClases = () => {
             const decodedToken = parseJwt(token);
             if (decodedToken && decodedToken.id) {
                 setUserId(decodedToken.id);
-                axios.get(`https://backend-service-830425129942.europe-west1.run.app/api/v1/user/rol/${decodedToken.id}`, {
+                axios.get(`http://localhost:3000/api/v1/user/rol/${decodedToken.id}`, {
                     headers: {
                         Authorization: `${token}`
                     }
@@ -35,7 +35,7 @@ const MisClases = () => {
                 .then(res => {
                     setRoleUser(res.data.data.role);
                     if (res.data.data.role === 'student') {
-                        axios.get(`https://backend-service-830425129942.europe-west1.run.app/api/v1/user/joinedclasses/${decodedToken.id}`, {
+                        axios.get(`http://localhost:3000/api/v1/user/joinedclasses/${decodedToken.id}`, {
                             headers: {
                                 Authorization: `${token}`
                             }
@@ -50,7 +50,7 @@ const MisClases = () => {
                             setError('Failed to load joined classes');
                         });
                     } else {
-                        axios.get(`https://backend-service-830425129942.europe-west1.run.app/api/v1/user/createdclasses/${decodedToken.id}`, {
+                        axios.get(`http://localhost:3000/api/v1/user/createdclasses/${decodedToken.id}`, {
                             headers: {
                                 Authorization: `${token}`
                             }
@@ -105,7 +105,7 @@ const MisClases = () => {
     const confirmDeleteClass = async () => {
         const token = localStorage.getItem('token');
         try {
-            await axios.delete(`https://backend-service-830425129942.europe-west1.run.app/api/v1/class/${classIdToDelete}`, {
+            await axios.delete(`http://localhost:3000/api/v1/class/${classIdToDelete}`, {
                 headers: {
                     Authorization: `${token}`
                 }
@@ -127,7 +127,7 @@ const MisClases = () => {
     const confirmLeaveClass = async () => {
         const token = localStorage.getItem('token');
         try {
-            await axios.patch(`https://backend-service-830425129942.europe-west1.run.app/api/v1/class/${classIdToLeave}/leave/${userId}`, null, {
+            await axios.patch(`http://localhost:3000/api/v1/class/${classIdToLeave}/leave/${userId}`, null, {
                 headers: {
                     Authorization: `${token}`
                 }

@@ -29,7 +29,7 @@ const cambiarContrasena = () => {
         
 
         try {
-            await axios.post('https://backend-service-830425129942.europe-west1.run.app/api/v1/reset/reset-password', { token, newPassword: password });
+            await axios.post('http://localhost:3000/api/v1/reset/reset-password', { token, newPassword: password });
             setSuccess('Contraseña restablecida con éxito. Se le reedirigirá a la página de inicio de sesión...');
             setError('');
             // Redirigir al inicio de sesión o a la página principal

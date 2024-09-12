@@ -23,7 +23,7 @@ const FlowsClase = () => {
         if (token) {
             const decodedToken = parseJwt(token);
             if (decodedToken && decodedToken.id) {
-                axios.get(`https://backend-service-830425129942.europe-west1.run.app/api/v1/user/${decodedToken.id}`, {
+                axios.get(`http://localhost:3000/api/v1/user/${decodedToken.id}`, {
                     headers: {
                         Authorization: `${token}`
                     }
@@ -31,7 +31,7 @@ const FlowsClase = () => {
                 .then(res => {
                     setUserRole(res.data.data.role);
 
-                    axios.get(`https://backend-service-830425129942.europe-west1.run.app/api/v1/class/${classId}/flows`, {
+                    axios.get(`http://localhost:3000/api/v1/class/${classId}/flows`, {
                         headers: {
                             Authorization: `${token}`
                         }
@@ -40,7 +40,7 @@ const FlowsClase = () => {
                         const flowsData = response.data.data;
                         for (const flow of flowsData) {
                             try {
-                                const userResponse = await axios.get(`https://backend-service-830425129942.europe-west1.run.app/api/v1/flow/user/${flow._id}`, {
+                                const userResponse = await axios.get(`http://localhost:3000/api/v1/flow/user/${flow._id}`, {
                                     headers: {
                                         Authorization: `${token}`
                                     }
@@ -97,7 +97,7 @@ const FlowsClase = () => {
         try {
             const token = localStorage.getItem('token');
             if (token) {
-                await axios.patch(`https://backend-service-830425129942.europe-west1.run.app/api/v1/class/${classId}/deleteFlow/${flowIdToDelete}`, null, {
+                await axios.patch(`http://localhost:3000/api/v1/class/${classId}/deleteFlow/${flowIdToDelete}`, null, {
                     headers: {
                         Authorization: `${token}`
                     }

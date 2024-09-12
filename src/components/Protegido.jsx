@@ -27,7 +27,7 @@ const Protegido = () => {
             console.log('Decoded Token:', decodedToken);
             if (decodedToken && decodedToken.id) {
                 setUserId(decodedToken.id);
-                axios.get(`https://backend-service-830425129942.europe-west1.run.app/api/v1/user/${decodedToken.id}`, {
+                axios.get(`http://localhost:3000/api/v1/user/${decodedToken.id}`, {
                     headers: {
                         Authorization: `${token}`
                     }
@@ -85,7 +85,7 @@ const Protegido = () => {
             return;
         }
 
-        const classLink = `https://backend-service-830425129942.europe-west1.run.app/api/v1/class/join/${classId}`;
+        const classLink = `http://localhost:3000/api/v1/class/join/${classId}`;
 
         try {
             const response = await axios.post(classLink, {}, {

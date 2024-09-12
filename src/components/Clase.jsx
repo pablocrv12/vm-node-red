@@ -26,7 +26,7 @@ const Clase = () => {
             const decodedToken = parseJwt(token);
             if (decodedToken) {
                 const loadTimer = setTimeout(() => {
-                    axios.get(`https://backend-service-830425129942.europe-west1.run.app/api/v1/class/${classId}`, {
+                    axios.get(`http://localhost:3000/api/v1/class/${classId}`, {
                         headers: {
                             Authorization: `${token}`
                         }
@@ -41,7 +41,7 @@ const Clase = () => {
                         setLoading(false);
                     });
 
-                    axios.get(`https://backend-service-830425129942.europe-west1.run.app/api/v1/user/rol/${decodedToken.id}`, {
+                    axios.get(`http://localhost:3000/api/v1/user/rol/${decodedToken.id}`, {
                         headers: {
                             Authorization: `${token}`
                         } 
@@ -55,7 +55,7 @@ const Clase = () => {
                         setLoading(false);
                     });
 
-                    axios.get(`https://backend-service-830425129942.europe-west1.run.app/api/v1/class/${classId}/flows`, {
+                    axios.get(`http://localhost:3000/api/v1/class/${classId}/flows`, {
                         headers: {
                             Authorization: `${token}`
                         }
@@ -127,7 +127,7 @@ const Clase = () => {
         
         const token = localStorage.getItem('token');
         if (token) {
-            axios.post(`https://backend-service-830425129942.europe-west1.run.app/api/v1/class/${classId}/flow/${flowId}`, null, {
+            axios.post(`http://localhost:3000/api/v1/class/${classId}/flow/${flowId}`, null, {
                 headers: {
                     Authorization: `${token}`
                 }
@@ -146,7 +146,7 @@ const Clase = () => {
     const handleEliminarFlujo = (flowId) => {
         const token = localStorage.getItem('token');
         if (token) {
-            axios.delete(`https://backend-service-830425129942.europe-west1.run.app/api/v1/class/${classId}/deleteFlow/${flowId}`, {
+            axios.delete(`http://localhost:3000/api/v1/class/${classId}/deleteFlow/${flowId}`, {
                 headers: {
                     Authorization: `${token}`
                 }

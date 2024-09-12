@@ -32,7 +32,7 @@ const Participantes = () => {
         const token = localStorage.getItem('token');
         if(token){
             axios.patch(
-                `https://backend-service-830425129942.europe-west1.run.app/api/v1/class/${classId}/eject/${userIdToEject}`,
+                `http://localhost:3000/api/v1/class/${classId}/eject/${userIdToEject}`,
                 {}, 
                 {
                     headers: {
@@ -58,7 +58,7 @@ const Participantes = () => {
         const token = localStorage.getItem('token');
         if (token) {
             const loadTimer = setTimeout(() => {
-                axios.get(`https://backend-service-830425129942.europe-west1.run.app/api/v1/class/students/${classId}`, {
+                axios.get(`http://localhost:3000/api/v1/class/students/${classId}`, {
                     headers: {
                         Authorization: `${token}`
                     }

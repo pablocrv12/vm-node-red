@@ -26,7 +26,7 @@ const NuevaClase = () => {
         const token = localStorage.getItem('token');
         if (token) {
             axios.post(
-                'https://backend-service-830425129942.europe-west1.run.app/api/v1/class', 
+                'http://localhost:3000/api/v1/class', 
                 { name: className }, 
                 { headers: { Authorization: `${token}` } }
             )

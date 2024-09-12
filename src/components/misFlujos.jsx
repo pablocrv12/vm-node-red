@@ -19,7 +19,7 @@ const MisFlujos = () => {
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (userId) {
-            axios.get(`https://backend-service-830425129942.europe-west1.run.app/api/v1/user/flows/${userId}`, {
+            axios.get(`http://localhost:3000/api/v1/user/flows/${userId}`, {
                 headers: {
                     Authorization: `${token}`
                 }
@@ -47,7 +47,7 @@ const MisFlujos = () => {
             setDeleting(true);
             const updatedFlows = flows.filter(flow => flow._id !== flowIdToDelete);
 
-            axios.patch(`https://backend-service-830425129942.europe-west1.run.app/api/v1/user/${userId}`, {
+            axios.patch(`http://localhost:3000/api/v1/user/${userId}`, {
                 flows: updatedFlows.map(flow => flow._id)
             }, {
                 headers: { Authorization: `${token}` }

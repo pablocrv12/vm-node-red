@@ -27,7 +27,7 @@ const EditarFlujo = () => {
         const fetchFlow = async () => {
             try {
                 const token = localStorage.getItem('token');
-                const response = await axios.get(`https://backend-service-830425129942.europe-west1.run.app/api/v1/flow/${flowId}`, { 
+                const response = await axios.get(`http://localhost:3000/api/v1/flow/${flowId}`, { 
                     headers: { Authorization: `${token}` }
                 });
                 
@@ -49,7 +49,7 @@ const EditarFlujo = () => {
             const token = localStorage.getItem('token');
     
             await axios.patch(
-                `https://backend-service-830425129942.europe-west1.run.app/api/v1/flow/${flowId}`,
+                `http://localhost:3000/api/v1/flow/${flowId}`,
                 { name: nombre }, 
                 { headers: { Authorization: `${token}` } }
             );

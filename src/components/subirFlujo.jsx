@@ -24,12 +24,12 @@ const SubirFlujo = () => {
         
         if (token) {
             const decodedToken = parseJwt(token);
-            axios.get(`https://backend-service-830425129942.europe-west1.run.app/api/v1/user/flows/${decodedToken.id}`, {
+            axios.get(`http://localhost:3000/api/v1/user/flows/${decodedToken.id}`, {
                 headers: { Authorization: `${token}` }
             })
             .then(response => {
                 setFlows(response.data.data);
-                return axios.get(`https://backend-service-830425129942.europe-west1.run.app/api/v1/class/${classId}/AllFlows`, {
+                return axios.get(`http://localhost:3000/api/v1/class/${classId}/AllFlows`, {
                     headers: { Authorization: `${token}` }
                 });
             })
@@ -70,7 +70,7 @@ const SubirFlujo = () => {
     const confirmUploadFlow = () => {
         const token = localStorage.getItem('token');
         if (token) {
-            axios.post(`https://backend-service-830425129942.europe-west1.run.app/api/v1/class/${classId}/uploadFlow/${flowIdToUpload}`, null, {
+            axios.post(`http://localhost:3000/api/v1/class/${classId}/uploadFlow/${flowIdToUpload}`, null, {
                 headers: { Authorization: `${token}` }
             })
             .then(response => {
@@ -95,7 +95,7 @@ const SubirFlujo = () => {
     const confirmCancelDelivery = () => {
         const token = localStorage.getItem('token');
         if (token) {
-            axios.patch(`https://backend-service-830425129942.europe-west1.run.app/api/v1/class/${classId}/deleteFlow/${flowIdToCancel}`, null, {
+            axios.patch(`http://localhost:3000/api/v1/class/${classId}/deleteFlow/${flowIdToCancel}`, null, {
                 headers: { Authorization: `${token}` }
             })
             .then(response => {

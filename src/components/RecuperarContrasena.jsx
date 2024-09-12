@@ -21,9 +21,9 @@ const RecuperarContrasena = () => {
     event.preventDefault();
 
     try {
-      const response = await axios.get(`https://backend-service-830425129942.europe-west1.run.app/api/v1/user/userByEmail/${email}`);
+      const response = await axios.get(`http://localhost:3000/api/v1/user/userByEmail/${email}`);
       if (response.data.status === "Ok" && response.data.data.email == email) {
-        await axios.post('https://backend-service-830425129942.europe-west1.run.app/api/v1/reset/send-reset-password', { email });
+        await axios.post('http://localhost:3000/api/v1/reset/send-reset-password', { email });
         setSuccess('Se ha enviado un enlace de reestablecimiento de la contraseña a tu correo electrónico.');
         setError('');
       } else {

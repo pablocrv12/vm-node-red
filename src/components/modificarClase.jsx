@@ -26,7 +26,7 @@ const ModificarClase = () => {
         const fetchClass = async () => {
             try {
                 const token = localStorage.getItem('token');
-                const response = await axios.get(`https://backend-service-830425129942.europe-west1.run.app/api/v1/class/${classId}`, { 
+                const response = await axios.get(`http://localhost:3000/api/v1/class/${classId}`, { 
                     headers: { Authorization: `${token}` } 
                 });
                 
@@ -46,7 +46,7 @@ const ModificarClase = () => {
             const token = localStorage.getItem('token');
     
             await axios.patch(
-                `https://backend-service-830425129942.europe-west1.run.app/api/v1/class/${classId}`,
+                `http://localhost:3000/api/v1/class/${classId}`,
                 { name: nombre },
                 { headers: { Authorization: `${token}` } }
             );
