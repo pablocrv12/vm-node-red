@@ -58,7 +58,6 @@ const MisFlujos = () => {
                 setSuccessMessage('Flujo eliminado correctamente');
                 setDeleting(false);
 
-                // Ocultar mensaje de éxito después de 1 segundo
                 setTimeout(() => {
                     setSuccessMessage('');
                 }, 1000);

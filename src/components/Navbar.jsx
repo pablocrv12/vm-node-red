@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../../css/Navbar.css';
-import axios from 'axios'; // Importar axios si no está ya importado
-import { handleAccessNodeRed } from '../utils/nodeRedUtils'; // Importa la función
-import checkAuth from './checkAuth';
-import { FaUserGraduate, FaChalkboardTeacher } from 'react-icons/fa'; // Importar íconos
+import axios from 'axios';
+import { handleAccessNodeRed } from '../utils/nodeRedUtils';
+import comprobarJWT from './comprobarJWT';
+import { FaUserGraduate, FaChalkboardTeacher } from 'react-icons/fa';
 
 const Navbar = () => {
-    checkAuth();
+    comprobarJWT();
 
     const navigate = useNavigate();
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -19,7 +19,6 @@ const Navbar = () => {
         if (token) {
             setIsAuthenticated(true);
 
-            // Obtener el rol del usuario
             const decodedToken = parseJwt(token);
             if (decodedToken) {
                 axios.get(`https://backend-service-830425129942.europe-west1.run.app/api/v1/user/rol/${decodedToken.id}`, {
@@ -33,7 +32,7 @@ const Navbar = () => {
                         student: 'Alumno',
                         professor: 'Profesor'
                     };
-                    setUserRole(roleMapping[role] || role); // Guardar el rol traducido en el estado
+                    setUserRole(roleMapping[role] || role);
                 })
                 .catch(err => {
                     console.error('Error fetching user role:', err);

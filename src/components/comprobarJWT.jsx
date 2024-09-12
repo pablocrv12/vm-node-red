@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 
 
-const checkAuth = () => {
+const comprobarJWT = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -39,4 +39,4 @@ function parseJwt(token) {
     }
 }
 
-export default checkAuth;
+export default comprobarJWT;

@@ -10,12 +10,12 @@ import SchoolIcon from '@mui/icons-material/School';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import checkAuth from './checkAuth';
+import comprobarJWT from './comprobarJWT';
 
 const defaultTheme = createTheme();
 
 const InvitacionClase = () => {
-    checkAuth();
+    comprobarJWT();
 
     const { classId } = useParams();
     const [className, setClassName] = useState('');
@@ -56,22 +56,22 @@ const InvitacionClase = () => {
         const recipientEmails = emails.split(',').map(email => email.trim());
         const token = localStorage.getItem('token');
         if (token) {
-            setLoading(true); // Start loading spinner
+            setLoading(true);
             try {
-                await axios.post('https://backend-service-830425129942.europe-west1.run.app/api/v1/class/send-invite', { recipientEmails, className, classId }, {
+                await axios.post('https://backend-service-830425129942.europe-west1.run.app/api/v1/email/send-invite', { recipientEmails, className, classId }, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
                 });
                 alert('Invitaciones enviadas exitosamente');
-                navigate(-1);  // Redirige a la página anterior
+                navigate(-1);
             } catch (error) {
                 console.error('Error enviando las invitaciones:', error);
             }
-            setLoading(false); // Stop loading spinner
+            setLoading(false);
         } else {
             console.error('No token found');
-            setLoading(false); // Stop loading spinner
+            setLoading(false);
         }
     };
 

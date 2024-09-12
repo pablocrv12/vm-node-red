@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useParams, useNavigate } from 'react-router-dom'; // Importa useNavigate
+import { useParams, useNavigate } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -10,17 +10,17 @@ import SchoolIcon from '@mui/icons-material/School';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import checkAuth from './checkAuth';
+import comprobarJWT from './comprobarJWT';
 
 const defaultTheme = createTheme();
 
 const ModificarClase = () => {
-    checkAuth();
+    comprobarJWT();
 
     const [nombre, setNombre] = useState('');
     const [placeholder, setPlaceholder] = useState('');
     const { classId } = useParams();
-    const navigate = useNavigate(); // Inicializa useNavigate
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchClass = async () => {
@@ -52,7 +52,7 @@ const ModificarClase = () => {
             );
     
             alert('Nombre de la clase modificado correctamente');
-            navigate(-1); // Redirige a la página anterior
+            navigate(-1);
         } catch (error) {
             console.error('Error al modificar el nombre de la clase:', error);
         }

@@ -19,24 +19,24 @@ const defaultTheme = createTheme();
 export default function SignIn() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState(''); // Estado para manejar el mensaje de error
-  const [loading, setLoading] = useState(false); // Estado para manejar el spinner de carga
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setLoading(true); // Mostrar el spinner al iniciar sesión
+    setLoading(true);
 
     try {
-      const response = await axios.post("https://backend-service-830425129942.europe-west1.run.app/login", { email, password });
+      const response = await axios.post("https://backend-service-830425129942.europe-west1.run.app/api/v1/user/login", { email, password });
       const { token } = response.data;
-      localStorage.setItem('token', token); // Almacenar token en localStorage
-      navigate('/protected'); // Redirigir a la ruta protegida
+      localStorage.setItem('token', token);
+      navigate('/protegido');
     } catch (error) {
       console.error('Error al iniciar sesión:', error);
-      setError('Usuario o contraseña incorrectos'); // Establecer el mensaje de error
+      setError('Usuario o contraseña incorrectos');
     } finally {
-      setLoading(false); // Ocultar el spinner después de la respuesta
+      setLoading(false);
     }
   };
 
@@ -58,7 +58,7 @@ export default function SignIn() {
           <Typography component="h1" variant="h5">
             Accede a tu cuenta
           </Typography>
-          {error && ( // Mostrar el mensaje de error si existe
+          {error && (
             <Typography color="error" variant="body2" sx={{ mt: 1 }}>
               {error}
             </Typography>
@@ -93,13 +93,13 @@ export default function SignIn() {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
-              disabled={loading} // Deshabilitar el botón mientras carga
+              disabled={loading}
             >
               Iniciar sesión
             </Button>
             <Grid container>
               <Grid item xs>
-                <Link href="#" variant="body2" onClick={() => navigate('/resetPassword')}>
+                <Link href="#" variant="body2" onClick={() => navigate('/recuperarContrasena')}>
                   ¿Has olvidado tu contraseña?
                 </Link>
               </Grid>
@@ -112,7 +112,7 @@ export default function SignIn() {
           </Box>
         </Box>
 
-        {loading && ( // Spinner que se muestra mientras está cargando
+        {loading && (
           <div style={{
             textAlign: 'center',
             fontFamily: 'Arial, sans-serif',

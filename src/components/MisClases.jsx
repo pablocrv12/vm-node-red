@@ -3,11 +3,11 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Button, Modal, Alert } from 'react-bootstrap';
 import Navbar from './Navbar';
-import checkAuth from './checkAuth';
+import comprobarJWT from './comprobarJWT';
 import '../../css/Spinner.css';
 
 const MisClases = () => {
-    checkAuth();
+    comprobarJWT();
 
     const [createdClasses, setCreatedClasses] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -18,7 +18,7 @@ const MisClases = () => {
     const [classIdToDelete, setClassIdToDelete] = useState(null);
     const [classIdToLeave, setClassIdToLeave] = useState('');
     const [userId, setUserId] = useState('');
-    const [successMessage, setSuccessMessage] = useState(''); // Estado para el mensaje de éxito
+    const [successMessage, setSuccessMessage] = useState('');
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -105,14 +105,14 @@ const MisClases = () => {
     const confirmDeleteClass = async () => {
         const token = localStorage.getItem('token');
         try {
-            await axios.delete(`http://localhost:3000/api/v1/class/${classIdToDelete}`, {
+            await axios.delete(`https://backend-service-830425129942.europe-west1.run.app/api/v1/class/${classIdToDelete}`, {
                 headers: {
                     Authorization: `${token}`
                 }
             });
             setCreatedClasses(createdClasses.filter(clase => clase._id !== classIdToDelete));
-            setSuccessMessage('Clase eliminada correctamente'); // Mensaje de éxito para eliminación
-            setTimeout(() => setSuccessMessage(''), 3000); // Limpia el mensaje después de 3 segundos
+            setSuccessMessage('Clase eliminada correctamente');
+            setTimeout(() => setSuccessMessage(''), 3000);
         } catch (error) {
             console.error('Error deleting class:', error);
         }
@@ -133,8 +133,8 @@ const MisClases = () => {
                 }
             });
             setJoinedClasses(joinedClasses.filter(clase => clase._id !== classIdToLeave));
-            setSuccessMessage('Has abandonado la clase correctamente'); // Mensaje de éxito para abandono
-            setTimeout(() => setSuccessMessage(''), 3000); // Limpia el mensaje después de 3 segundos
+            setSuccessMessage('Has abandonado la clase correctamente');
+            setTimeout(() => setSuccessMessage(''), 3000);
         } catch (error) {
             console.error('Error leaving class:', error);
         }
@@ -157,7 +157,7 @@ const MisClases = () => {
             <Navbar />
             <div style={{ marginTop: '70px', textAlign: 'center' }}>
                 <h1>Tus clases</h1>
-                {successMessage && <Alert variant="success">{successMessage}</Alert>} {/* Mostrar mensaje de éxito */}
+                {successMessage && <Alert variant="success">{successMessage}</Alert>} {}
                 {roleUser === 'professor' && (
                     <ul className="list-group">
                         {createdClasses.length > 0 ? (

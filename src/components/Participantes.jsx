@@ -4,11 +4,11 @@ import { useParams } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Modal, Container, Row, Col, Button, Alert } from 'react-bootstrap';
 import Navbar from './Navbar';
-import checkAuth from './checkAuth';
+import comprobarJWT from './comprobarJWT';
 
 const Participantes = () => {
 
-    checkAuth();
+    comprobarJWT();
 
     const { classId } = useParams();
     const [participants, setParticipants] = useState([]);
@@ -16,7 +16,7 @@ const Participantes = () => {
     const [error, setError] = useState(null);
     const [showConfirmationModal, setShowConfirmationModal] = useState(false);
     const [userIdToEject, setUserIdToEject] = useState(null);
-    const [successMessage, setSuccessMessage] = useState(''); // State for success message
+    const [successMessage, setSuccessMessage] = useState('');
 
     const openConfirmationModal = (userId) => {
         setUserIdToEject(userId);
@@ -43,10 +43,9 @@ const Participantes = () => {
             .then(response => {
                 console.log('Student ejected successfully:', response.data);
                 closeConfirmationModal();
-                // Refresh participants list after successful eject
                 setParticipants(participants.filter(participant => participant._id !== userIdToEject));
-                setSuccessMessage('Participante expulsado con éxito'); // Set success message
-                setTimeout(() => setSuccessMessage(''), 3000); // Clear success message after 3 seconds
+                setSuccessMessage('Participante expulsado con éxito');
+                setTimeout(() => setSuccessMessage(''), 3000);
             })
             .catch(error => {
                 console.error('Error ejecting student:', error);
@@ -58,7 +57,6 @@ const Participantes = () => {
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token) {
-            // Simulate loading time
             const loadTimer = setTimeout(() => {
                 axios.get(`https://backend-service-830425129942.europe-west1.run.app/api/v1/class/students/${classId}`, {
                     headers: {
@@ -74,9 +72,9 @@ const Participantes = () => {
                     setError('Failed to load participants');
                     setLoading(false);
                 });
-            }, 1000); // 1 second delay
+            }, 1000);
 
-            return () => clearTimeout(loadTimer); // Cleanup timer on unmount
+            return () => clearTimeout(loadTimer);
         } else {
             console.error('No token found');
             setLoading(false);
@@ -128,7 +126,7 @@ const Participantes = () => {
       <div style={{ minHeight: '100vh', backgroundColor: '#f0f0f0', textAlign: 'center' }}>
         <Navbar />
         <h1 style={{ marginTop: '60px', marginBottom: '50px', fontWeight: 'bold' }}>Participantes</h1>
-        {successMessage && <Alert variant="success">{successMessage}</Alert>} {/* Display success message */}
+        {successMessage && <Alert variant="success">{successMessage}</Alert>} {}
         {participants.length === 0 ? (
           <p>Todavía no hay ningún participante.</p>
         ) : (

@@ -10,13 +10,13 @@ import SchoolIcon from '@mui/icons-material/School';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import checkAuth from './checkAuth';
+import comprobarJWT from './comprobarJWT';
 
 const defaultTheme = createTheme();
 
 const NuevaClase = () => {
 
-    checkAuth();
+    comprobarJWT();
     
     const [className, setClassName] = useState('');
     const navigate = useNavigate();
@@ -32,12 +32,12 @@ const NuevaClase = () => {
             )
             .then(res => {
                 alert('Clase creada con éxito');
-                navigate('/protected');
+                navigate('/protegido');
             })
             .catch(err => {
                 console.log(err);
                 alert('No se ha podido crear la clase');
-                navigate('/protected');
+                navigate('/protegido');
             });
         } else {
             navigate('/login');

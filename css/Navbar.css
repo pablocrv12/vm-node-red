@@ -15,7 +15,7 @@
 
 .logo {
   max-width: 200px; /* Establece un ancho máximo para el logo */
-  display: flex; /* Usa flexbox para alinear el contenido verticalmente */
+  display: flex; 
   align-items: center; /* Alinea el contenido verticalmente */
   height: 6em;
   padding: 1.5em;

@@ -17,12 +17,12 @@ import axios from 'axios';
 import Navbar from './Navbar';
 import Modal from 'react-bootstrap/Modal';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import checkAuth from './checkAuth';
+import comprobarJWT from './comprobarJWT';
 
 const defaultTheme = createTheme();
 
 const Perfil = () => {
-  checkAuth();
+  comprobarJWT();
 
   const navigate = useNavigate();
   const [currentName, setCurrentName] = useState('');
@@ -32,8 +32,8 @@ const Perfil = () => {
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
   const [currentPasswordInput, setCurrentPasswordInput] = useState('');
   const [newPasswordInput, setNewPasswordInput] = useState('');
-  const [loading, setLoading] = useState(true); // State for loading
-  const [error, setError] = useState(null); // State for error
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -49,12 +49,12 @@ const Perfil = () => {
         .then(res => {
           setCurrentName(res.data.data.name);
           setCurrentEmail(res.data.data.email);
-          setLoading(false); // Set loading to false after fetching data
+          setLoading(false);
         })
         .catch(error => {
           console.error('Error al obtener los datos del usuario:', error);
           setError('Error al obtener los datos del usuario');
-          setLoading(false); // Set loading to false in case of error
+          setLoading(false);
         });
       }
     }
@@ -101,7 +101,7 @@ const Perfil = () => {
     }
   };
 
-  const handleChangePassword = (event) => {
+  const handleCambiarContrasena = (event) => {
     event.preventDefault();
 
     if (!currentPasswordInput || !newPasswordInput) {
@@ -124,7 +124,6 @@ const Perfil = () => {
         .then(response => {
             console.log('Contraseña actualizada:', response.data);
             alert('Contraseña actualizada con éxito');
-            // Limpiar los campos de contraseña
             setCurrentPasswordInput('');
             setNewPasswordInput('');
         })
@@ -254,7 +253,7 @@ const Perfil = () => {
             <Typography component="h1" variant="h5" sx={{ mt: 4 }}>
               Cambiar Contraseña
             </Typography>
-            <Box component="form" noValidate onSubmit={handleChangePassword} sx={{ mt: 1 }}>
+            <Box component="form" noValidate onSubmit={handleCambiarContrasena} sx={{ mt: 1 }}>
               <FormControl fullWidth margin="normal" variant="outlined">
                 <TextField
                   variant="outlined"
@@ -315,7 +314,7 @@ const Perfil = () => {
           </Typography>
           <Button
             variant="contained"
-            sx={{ backgroundColor: 'darkred', color: 'white' }} // Estilo del botón
+            sx={{ backgroundColor: 'darkred', color: 'white' }}
             onClick={() => setShowConfirmationModal(true)}
           >
             Eliminar cuenta

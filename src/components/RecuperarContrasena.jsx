@@ -12,7 +12,7 @@ import MailOutlineIcon from '@mui/icons-material/MailOutline';
 
 const defaultTheme = createTheme();
 
-const ResetPassword = () => {
+const RecuperarContrasena = () => {
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -21,24 +21,19 @@ const ResetPassword = () => {
     event.preventDefault();
 
     try {
-      // Verificar si el correo electrónico existe en la base de datos
       const response = await axios.get(`https://backend-service-830425129942.europe-west1.run.app/api/v1/user/userByEmail/${email}`);
       if (response.data.status === "Ok" && response.data.data.email == email) {
-        // Si el usuario existe, enviar el enlace de recuperación
-        await axios.post('https://backend-service-830425129942.europe-west1.run.app/api/v1/user/send-reset-password', { email });
+        await axios.post('https://backend-service-830425129942.europe-west1.run.app/api/v1/reset/send-reset-password', { email });
         setSuccess('Se ha enviado un enlace de reestablecimiento de la contraseña a tu correo electrónico.');
         setError('');
       } else {
-        // Si no se encuentra el usuario, mostrar un error
         setError('El correo electrónico no está registrado. Verifica la dirección de correo electrónico.');
         setSuccess('');
       }
     } catch (error) {
       if (error.response && error.response.status === 404) {
-        // El correo electrónico no está registrado
         setError('El correo electrónico no está registrado. Verifica la dirección de correo electrónico.');
       } else {
-        // Otro tipo de error
         setError('No se pudo enviar el correo de recuperación. Verifica la dirección de correo electrónico.');
       }
       setSuccess('');
@@ -63,12 +58,12 @@ const ResetPassword = () => {
           <Typography component="h1" variant="h5">
             Recuperar Contraseña
           </Typography>
-          {error && ( // Mostrar el mensaje de error si existe
+          {error && (
             <Typography color="error" variant="body2" style={{ marginTop: 1 }}>
               {error}
             </Typography>
           )}
-          {success && ( // Mostrar el mensaje de éxito si existe
+          {success && (
             <Typography color="success" variant="body2" style={{ marginTop: 1 }}>
               {success}
             </Typography>
@@ -101,4 +96,4 @@ const ResetPassword = () => {
   );
 }
 
-export default ResetPassword;
+export default RecuperarContrasena;

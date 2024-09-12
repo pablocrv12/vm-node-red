@@ -4,11 +4,11 @@ import { useParams, useNavigate } from 'react-router-dom';
 import Navbar from './Navbar';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container, Row, Col, Button } from 'react-bootstrap';
-import checkAuth from './checkAuth';
+import comprobarJWT from './comprobarJWT';
 
 const Clase = () => {
 
-    checkAuth();
+    comprobarJWT();
 
     const { classId } = useParams();
     const [classDetail, setClassDetail] = useState(null);
@@ -25,7 +25,6 @@ const Clase = () => {
         if (token) {
             const decodedToken = parseJwt(token);
             if (decodedToken) {
-                // Simulate loading time
                 const loadTimer = setTimeout(() => {
                     axios.get(`https://backend-service-830425129942.europe-west1.run.app/api/v1/class/${classId}`, {
                         headers: {

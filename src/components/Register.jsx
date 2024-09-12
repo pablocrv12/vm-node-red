@@ -25,7 +25,7 @@ export default function Register() {
   const [apellidos, setApellidos] = useState('');
   const [role, setRole] = useState('');
   const [isFormValid, setIsFormValid] = useState(false);
-  const [loading, setLoading] = useState(false);  // Estado para el spinner
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -38,10 +38,10 @@ export default function Register() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setLoading(true);  // Mostrar el spinner
+    setLoading(true);
 
     try {
-      const response = await fetch('https://backend-service-830425129942.europe-west1.run.app/register', {
+      const response = await fetch('https://backend-service-830425129942.europe-west1.run.app/api/v1/user/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -59,11 +59,10 @@ export default function Register() {
         alert('Te has registrado correctamente');
         navigate('/login');
       } else {
-        alert('Error: ' + result.message);
+        alert('El correo electrónico ya está en uso, por favor, inténtalo con otro:');
       }
     } catch (error) {
-      console.error('El correo electrónico ya está en uso, por favor, inténtalo con otro:', error);
-      alert('Registration failed');
+      alert('El correo electrónico ya está en uso, por favor, inténtalo con otro:');
     } finally {
       setLoading(false); 
     }
@@ -176,7 +175,7 @@ export default function Register() {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
-              disabled={!isFormValid || loading}  // Deshabilitar el botón mientras está cargando
+              disabled={!isFormValid || loading}
             >
               Unirse
             </Button>

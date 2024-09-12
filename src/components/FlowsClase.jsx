@@ -3,10 +3,10 @@ import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Button, Modal, Row, Col, Alert } from 'react-bootstrap';
 import Navbar from './Navbar';
-import checkAuth from './checkAuth';
+import comprobarJWT from './comprobarJWT';
 
 const FlowsClase = () => {
-    checkAuth();
+    comprobarJWT();
 
     const { classId } = useParams();
     const [flows, setFlows] = useState([]);
@@ -15,7 +15,7 @@ const FlowsClase = () => {
     const [showConfirmationModal, setShowConfirmationModal] = useState(false);
     const [flowIdToDelete, setFlowIdToDelete] = useState(null);
     const [userRole, setUserRole] = useState('');
-    const [successMessage, setSuccessMessage] = useState('');  // Nuevo estado para el mensaje de éxito
+    const [successMessage, setSuccessMessage] = useState('');
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -31,7 +31,6 @@ const FlowsClase = () => {
                 .then(res => {
                     setUserRole(res.data.data.role);
 
-                    // Fetch the flows data
                     axios.get(`https://backend-service-830425129942.europe-west1.run.app/api/v1/class/${classId}/flows`, {
                         headers: {
                             Authorization: `${token}`
@@ -39,7 +38,6 @@ const FlowsClase = () => {
                     })
                     .then(async (response) => {
                         const flowsData = response.data.data;
-                        // Fetch user data for each flow
                         for (const flow of flowsData) {
                             try {
                                 const userResponse = await axios.get(`https://backend-service-830425129942.europe-west1.run.app/api/v1/flow/user/${flow._id}`, {
@@ -104,9 +102,9 @@ const FlowsClase = () => {
                         Authorization: `${token}`
                     }
                 });
-                setFlows(flows.filter(flow => flow._id !== flowIdToDelete));  // Actualiza la lista de flujos
-                setSuccessMessage('Flujo eliminado correctamente');  // Muestra el mensaje de éxito
-                setTimeout(() => setSuccessMessage(''), 3000);  // Limpia el mensaje después de 3 segundos
+                setFlows(flows.filter(flow => flow._id !== flowIdToDelete)); 
+                setSuccessMessage('Flujo eliminado correctamente'); 
+                setTimeout(() => setSuccessMessage(''), 3000);
             }
             setShowConfirmationModal(false);
         } catch (error) {
@@ -164,7 +162,7 @@ const FlowsClase = () => {
         <div>
             <Navbar />
             <h1 className="text-center mt-3 mb-4 font-weight-bold">Flows List</h1>
-            {successMessage && <Alert variant="success" className="text-center">{successMessage}</Alert>}  {/* Muestra el mensaje de éxito */}
+            {successMessage && <Alert variant="success" className="text-center">{successMessage}</Alert>}  {}
             {flows.length > 0 ? (
                 flows.map((flow) => (
                     <Row key={flow._id} className="mb-3">
@@ -175,7 +173,7 @@ const FlowsClase = () => {
                             <p>{flow.user.name} - {flow.user.email}</p>
                         </Col>
                         <Col xs={4} className="d-flex justify-content-end pr-3">
-                            {/* Only show the delete button if the user is a professor */}
+                            {}
                             {userRole === 'professor' && (
                                 <Button variant="danger" onClick={() => handleDeleteFlow(flow._id)}>Eliminar</Button>
                             )}

@@ -3,11 +3,11 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { Button, Modal } from 'react-bootstrap';
 import Navbar from './Navbar';
-import checkAuth from './checkAuth';
+import comprobarJWT from './comprobarJWT';
 
 const MisFlows = () => {
 
-    checkAuth();
+    comprobarJWT();
     
     const { classId } = useParams();
     const [flows, setFlows] = useState([]);
@@ -50,7 +50,6 @@ const MisFlows = () => {
             .then(response => {
                 console.log('Flow deleted successfully:', response.data);
                 setShowConfirmationModal(false);
-                // Actualizar la lista de flujos después de eliminar el flujo
                 setFlows(flows.filter(flow => flow._id !== flowIdToDelete));
             })
             .catch(error => {

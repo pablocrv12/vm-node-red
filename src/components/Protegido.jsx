@@ -5,11 +5,11 @@ import Modal from 'react-modal';
 import Navbar from './Navbar';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container, Row, Col, Button } from 'react-bootstrap';
-import checkAuth from './checkAuth';
+import comprobarJWT from './comprobarJWT';
 import { handleAccessNodeRed } from '../utils/nodeRedUtils';
 
-const Protected = () => {
-    checkAuth();
+const Protegido = () => {
+    comprobarJWT();
 
     const navigate = useNavigate();
     const [roleUser, setRoleUser] = useState('');
@@ -17,8 +17,8 @@ const Protected = () => {
     const [userName, setUserName] = useState('');
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [classId, setClassId] = useState('');
-    const [loadingPage, setLoadingPage] = useState(true); // Estado de carga de la página
-    const [loadingNodeRed, setLoadingNodeRed] = useState(false); // Estado de carga de Node-RED
+    const [loadingPage, setLoadingPage] = useState(true);
+    const [loadingNodeRed, setLoadingNodeRed] = useState(false);
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -35,7 +35,7 @@ const Protected = () => {
                 .then(res => {
                     setRoleUser(res.data.data.role);
                     setUserName(res.data.data.name.split(' ')[0]);   
-                    setLoadingPage(false); // Datos cargados, ocultar spinner de carga inicial
+                    setLoadingPage(false);
                 })
                 .catch(err => {
                     console.log(err);
@@ -77,7 +77,7 @@ const Protected = () => {
         setClassId(event.target.value);
     };
 
-    const handleJoinClass = async () => {
+    const handleUnirse = async () => {
         const token = localStorage.getItem('token');
 
         if (!classId) {
@@ -261,7 +261,7 @@ const Protected = () => {
                         style={{ width: '100%', marginBottom: '10px' }}
                     />
                     <div>
-                        <Button onClick={handleJoinClass}>Aceptar</Button>
+                        <Button onClick={handleUnirse}>Aceptar</Button>
                         <Button onClick={closeModal} style={{ marginLeft: '10px' }}>Cancelar</Button>
                     </div>
                 </div>
@@ -279,4 +279,4 @@ const Protected = () => {
     );
 };
 
-export default Protected;
+export default Protegido;

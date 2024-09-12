@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { BrowserRouter, Route, Routes, useNavigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Login from './components/Login';
-import Protected from './components/Protected';
+import Protegido from './components/Protegido';
 import Register from './components/Register';
 import MisClases from './components/MisClases';
 import InvitacionClase from './components/InvitacionClase';
@@ -10,7 +10,7 @@ import NuevaClase from './components/NuevaClase';
 import Clase from './components/Clase';
 import FlowsClase from './components/FlowsClase';
 import Participantes from './components/Participantes';
-import JoinClass from './components/joinClass';
+import Unirse from './components/Unirse';
 import SubirFlujo from './components/subirFlujo';
 import MisFlujos from './components/misFlujos';
 import MisFlows from './components/misflows';
@@ -18,14 +18,14 @@ import ModificarClase from "./components/modificarClase";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container, Row, Col } from 'react-bootstrap';
 import Perfil from "./components/Perfil";
-import checkAuth from './components/checkAuth';
-import ResetPassword from './components/ResetPassword';
-import ChangePassword from './components/ChangePassword';
+import comprobarJWT from './components/comprobarJWT';
+import RecuperarContrasena from './components/RecuperarContrasena';
+import CambiarContrasena from './components/CambiarContrasena';
 import EditarFlujo from "./components/EditarFlujo";
 
 const Home = () => {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(true); // Agregar estado de carga
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -37,16 +37,15 @@ const Home = () => {
       if (isExpired) {
         console.log('Token has expired');
         localStorage.removeItem('token');
-        navigate('/'); // Redirige al usuario a la página de login si el token ha expirado
-        setLoading(false); // Detener el spinner
+        navigate('/'); 
+        setLoading(false);
       } else {
-        // El token es válido, opcionalmente puedes hacer alguna acción adicional aquí
-        navigate('/protected');
-        setLoading(false); // Detener el spinner
+        navigate('/protegido');
+        setLoading(false);
       }
     } else {
-      navigate('/'); // Redirige al usuario a la página de login si no existe un token
-      setLoading(false); // Detener el spinner
+      navigate('/');
+      setLoading(false);
     }
   }, [navigate]);
 
@@ -64,10 +63,9 @@ const Home = () => {
     }
   }
 
-  // Simula un retraso de 1 segundo
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 1000);
-    return () => clearTimeout(timer); // Limpia el temporizador si el componente se desmonta
+    return () => clearTimeout(timer);
   }, []);
 
   if (loading) {
@@ -157,10 +155,10 @@ const App = () => {
           <Route path='/' element={<Home />} />
           <Route path='/login' element={<Login />} />
           <Route path='/perfil' element={<Perfil />} />
-          <Route path='/protected' element={<Protected />} />
+          <Route path='/protegido' element={<Protegido />} />
           <Route path='/register' element={<Register />} />
-          <Route path='/resetPassword' element={<ResetPassword />} />
-          <Route path='/changePassword' element={<ChangePassword />} />
+          <Route path='/recuperarContrasena' element={<RecuperarContrasena />} />
+          <Route path='/cambiarContrasena' element={<CambiarContrasena />} />
           <Route path='/invitacionClase/:classId' element={<InvitacionClase />} />
           <Route path='/nuevaClase' element={<NuevaClase />} />
           <Route path='/MisClases' element={<MisClases />} />
@@ -172,7 +170,7 @@ const App = () => {
           <Route path="/misFlujos/:userId" element={<MisFlujos />} />
           <Route path="/editarFlujo/:flowId" element={<EditarFlujo />} />
           <Route path="/clase/:classId/participantes" element={<Participantes />} />
-          <Route path="/join/:classId" element={<JoinClass />} />
+          <Route path="/join/:classId" element={<Unirse />} />
         </Routes>
       </BrowserRouter>
     </div>

@@ -3,10 +3,10 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { Button, Modal, Alert } from 'react-bootstrap';
 import Navbar from './Navbar';
-import checkAuth from './checkAuth';
+import comprobarJWT from './comprobarJWT';
 
 const SubirFlujo = () => {
-    checkAuth();
+    comprobarJWT();
 
     const { classId } = useParams();
     const [flows, setFlows] = useState([]);
@@ -24,13 +24,11 @@ const SubirFlujo = () => {
         
         if (token) {
             const decodedToken = parseJwt(token);
-            // Fetch all available flows
             axios.get(`https://backend-service-830425129942.europe-west1.run.app/api/v1/user/flows/${decodedToken.id}`, {
                 headers: { Authorization: `${token}` }
             })
             .then(response => {
                 setFlows(response.data.data);
-                // Fetch all flows already uploaded to the class
                 return axios.get(`https://backend-service-830425129942.europe-west1.run.app/api/v1/class/${classId}/AllFlows`, {
                     headers: { Authorization: `${token}` }
                 });
@@ -80,7 +78,7 @@ const SubirFlujo = () => {
                 setShowConfirmationModal(false);
                 setSuccessMessage('Se ha entregado correctamente');
                 setUploadedFlows(prevUploadedFlows => [...prevUploadedFlows, { _id: flowIdToUpload }]);
-                setTimeout(() => setSuccessMessage(''), 3000); // Clear success message after 3 seconds
+                setTimeout(() => setSuccessMessage(''), 3000);
             })
             .catch(error => {
                 console.error('Error uploading flow:', error);
@@ -91,7 +89,7 @@ const SubirFlujo = () => {
 
     const handleCancelDelivery = (flowId) => {
         setFlowIdToCancel(flowId);
-        setShowCancelModal(true); // Show cancel confirmation modal
+        setShowCancelModal(true);
     };
 
     const confirmCancelDelivery = () => {
@@ -102,10 +100,10 @@ const SubirFlujo = () => {
             })
             .then(response => {
                 console.log('Flow delivery cancelled successfully:', response.data);
-                setUploadedFlows(prevUploadedFlows => prevUploadedFlows.filter(flow => flow._id !== flowIdToCancel)); // Remove flow from state
+                setUploadedFlows(prevUploadedFlows => prevUploadedFlows.filter(flow => flow._id !== flowIdToCancel));
                 setShowCancelModal(false);
                 setSuccessMessage('Entrega cancelada correctamente');
-                setTimeout(() => setSuccessMessage(''), 3000); // Clear success message after 3 seconds
+                setTimeout(() => setSuccessMessage(''), 3000);
             })
             .catch(error => {
                 console.error('Error cancelling flow delivery:', error);

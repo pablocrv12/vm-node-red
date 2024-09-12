@@ -16,12 +16,12 @@
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    z-index: 1000; /* Asegúrate de que esté por encima de otros contenidos */
-    display: none; /* Ocultar por defecto */
+    z-index: 1000; 
+    display: none;
 }
 
 .loading-message.active {
-    display: block; /* Mostrar cuando sea necesario */
+    display: block;
 }
 
 .spinner {

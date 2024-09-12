@@ -1,20 +1,19 @@
-// JoinClass.js
 import React, { useEffect } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
-import checkAuth from './checkAuth';
+import comprobarJWT from './comprobarJWT';
 
-const JoinClass = () => {
+const Unirse = () => {
 
-    checkAuth();
+    comprobarJWT();
     
     const { classId } = useParams();
     const navigate = useNavigate();
 
     useEffect(() => {
-        const joinClass = async () => {
+        const unirse = async () => {
             try {
-                const token = localStorage.getItem('token'); // Obtener el token del localStorage
+                const token = localStorage.getItem('token');
                 console.log("token" + token)
                 if (!token) {
                     alert('You must be logged in to join the class');
@@ -36,7 +35,7 @@ const JoinClass = () => {
             }
         };
 
-        joinClass();
+        unirse();
     }, [classId, navigate]);
 
 
@@ -51,4 +50,4 @@ const JoinClass = () => {
     );
 };
 
-export default JoinClass;
+export default Unirse;

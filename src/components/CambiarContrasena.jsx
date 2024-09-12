@@ -4,7 +4,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { TextField, Button, Typography, Container, Box, CssBaseline } from '@mui/material';
 
 
-const changePassword = () => {
+const cambiarContrasena = () => {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState('');
@@ -29,7 +29,7 @@ const changePassword = () => {
         
 
         try {
-            await axios.post('https://backend-service-830425129942.europe-west1.run.app/api/v1/user/reset-password', { token, newPassword: password });
+            await axios.post('https://backend-service-830425129942.europe-west1.run.app/api/v1/reset/reset-password', { token, newPassword: password });
             setSuccess('Contraseña restablecida con éxito. Se le reedirigirá a la página de inicio de sesión...');
             setError('');
             // Redirigir al inicio de sesión o a la página principal
@@ -96,4 +96,4 @@ const changePassword = () => {
         </Container>
     );
 }
-export default changePassword;
+export default cambiarContrasena;
